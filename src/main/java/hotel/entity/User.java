@@ -1,14 +1,25 @@
 package hotel.entity;
 
+import hotel.enums.Role;
+
 public class User {
     private int id;
     private String name;
     private String surname;
-    private String phoneNumber;
-    private int countryId;
+    private String email;
+    private String password;
     private int accessId;
     private int settingsId;
+    private Role role;
 
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public int getId() {
         return id;
@@ -34,21 +45,22 @@ public class User {
         this.surname = surname;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public Role getRole() {
+        return role;
     }
 
-    public int getCountryId() {
-        return countryId;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
+    public void setEmail(String email) {
+        this.email = email;
     }
+
 
     public int getAccessId() {
         return accessId;
@@ -72,8 +84,7 @@ public class User {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", countryId=" + countryId +
+                ", email='" + email + '\'' +
                 ", accessId=" + accessId +
                 ", settingsId=" + settingsId +
                 '}';

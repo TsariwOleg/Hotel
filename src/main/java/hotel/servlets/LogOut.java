@@ -7,16 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/myAccount/myBusiness")
-public class MyBusiness extends HttpServlet {
-
+@WebServlet("/logOut")
+public class LogOut extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("my_business.jsp").forward(req,resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+        req.getSession().removeAttribute("id");
+        req.getSession().removeAttribute("role");
+        resp.sendRedirect(req.getContextPath()+"/rooms");
     }
 }

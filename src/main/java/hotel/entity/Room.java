@@ -1,10 +1,11 @@
 package hotel.entity;
 
+import hotel.enums.ClassOfTheRoom;
+
 import java.util.List;
 
 public class Room {
     private int id;
-    private String name;
     private int roomNumber;
     private int price;
     private int countOfClient;
@@ -13,15 +14,25 @@ public class Room {
     private String additionalServices;
     private List<String> amenitiesOfRoom;
     private List<FacilitiesEntity> facilitiesEntities;
-    private String classOfRoom;
-    private CategoryReviews categoryReviews;
+    private ClassOfTheRoom classOfTheRoom;
 
-    public CategoryReviews getCategoryReviews() {
-        return categoryReviews;
+
+    private Review.CategoryReviews totalPoint;
+
+    public ClassOfTheRoom getClassOfTheRoom() {
+        return classOfTheRoom;
     }
 
-    public void setCategoryReviews(int comfortable,int fortunes,int soundproof,int service) {
-        this.categoryReviews = new CategoryReviews(comfortable,fortunes,soundproof,service);
+    public void setClassOfTheRoom(ClassOfTheRoom classOfTheRoom) {
+        this.classOfTheRoom = classOfTheRoom;
+    }
+
+    public Review.CategoryReviews getTotalPoint() {
+        return totalPoint;
+    }
+
+    public void setTotalPoint(Review.CategoryReviews totalPoint) {
+        this.totalPoint = totalPoint;
     }
 
     public int getRoomNumber() {
@@ -40,14 +51,6 @@ public class Room {
         this.additionalServices = additionalServices;
     }
 
-    public String getClassOfRoom() {
-        return classOfRoom;
-    }
-
-    public void setClassOfRoom(String classOfRoom) {
-        this.classOfRoom = classOfRoom;
-    }
-
     public int getId() {
         return id;
     }
@@ -56,13 +59,7 @@ public class Room {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public int getPrice() {
         return price;
@@ -116,7 +113,6 @@ public class Room {
     public String toString() {
         return "Room{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
                 ", price=" + price +
                 ", countOfClient=" + countOfClient +
                 ", areaOfRoom=" + areaOfRoom +
@@ -126,33 +122,4 @@ public class Room {
                 '}';
     }
 
-    private class CategoryReviews{
-        private int comfortable;
-        private int fortunes;
-        private int soundproof;
-        private int service;
-
-        public CategoryReviews(int comfortable, int fortunes, int soundproof, int service) {
-            this.comfortable = comfortable;
-            this.fortunes = fortunes;
-            this.soundproof = soundproof;
-            this.service = service;
-        }
-
-        public int getComfortable() {
-            return comfortable;
-        }
-
-        public int getFortunes() {
-            return fortunes;
-        }
-
-        public int getSoundproof() {
-            return soundproof;
-        }
-
-        public int getService() {
-            return service;
-        }
-    }
 }

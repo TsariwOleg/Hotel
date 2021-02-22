@@ -99,12 +99,7 @@ CREATE TABLE IF NOT EXISTS rooms_Photo_OF_ROOMS (
   FOREIGN KEY(id_Photo_OF_ROOMS) REFERENCES  Photo_OF_ROOMS(id)
  );
 
-CREATE TABLE IF NOT EXISTS hotels_rooms (
- id_hotels INT  ,
-  id_room INT  ,
-  FOREIGN KEY(id_hotels) REFERENCES  hotels(id),
-  FOREIGN KEY(id_room) REFERENCES  ROOMS(id)
- );
+
 
 CREATE TABLE IF NOT EXISTS room_Amenities_In_Room (
  id_room INT  ,

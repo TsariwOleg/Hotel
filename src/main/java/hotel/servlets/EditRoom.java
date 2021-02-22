@@ -1,7 +1,6 @@
 package hotel.servlets;
 
 import hotel.dao.DAORoom;
-import hotel.entity.Hotel;
 import hotel.entity.Room;
 
 import javax.servlet.ServletException;
@@ -23,7 +22,6 @@ public class EditRoom extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("--------------");
         if (req.getParameter("class_button")!=null){
             System.out.println(req.getParameter("class"));
         }

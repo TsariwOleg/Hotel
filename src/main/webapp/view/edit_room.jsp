@@ -16,71 +16,11 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Hotel</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-        </ul>
-
-        <form class="form-inline my-2 my-lg-0">
+<form action="<%=strContextPath%>/signIn" method="post">
+    <jsp:include page="myAccount/includedPage/navbar.jsp"/>
 
 
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle ml-4" type="button" id="dropdownMenu1"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-globe2"></i> Language
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <a class="dropdown-item" href="#!">English</a>
-                    <a class="dropdown-item" href="#!">Ukranian</a>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                <i class="bi bi-person-circle"></i> Sign in
-            </button>
-
-
-            <!-- Modal HTML -->
-            <div id="myModal" class="modal fade">
-                <div class="modal-dialog modal-login">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Member Login</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="/examples/actions/confirmation.php" method="post">
-                                <div class="form-group">
-                                    <i class="fa fa-user"></i>
-                                    <input type="text" class="form-control mt-4 ml-auto mr-auto" placeholder="Username"
-                                           required="required">
-                                </div>
-                                <div class="form-group">
-                                    <i class="fa fa-lock"></i>
-                                    <input type="password" class="form-control mt-2 ml-auto mr-auto"
-                                           placeholder="Password" required="required">
-                                </div>
-                                <div class="form-group">
-                                    <input type="submit" class="btn btn-primary btn-block btn-lg mt-4" value="Login">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="#">Forgot Password?</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </form>
-    </div>
-</nav>
+</form>
 
 
 <div class="container">
@@ -120,7 +60,7 @@
             <div class="col-5 ml-5 pl-4">
                 <a class="btn btn-link" data-toggle="collapse" href="#collapseEditClass" aria-expanded="false"
                    aria-controls="collapseExample">
-                    <h1>${room.classOfRoom}</h1>
+                    <h1>${room.classOfTheRoom.name()}</h1>
                 </a>
                 <br>
 

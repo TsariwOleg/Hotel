@@ -6,8 +6,18 @@ public class Review {
     private int id;
     private String review;
     private LocalDate date;
-    private int userId;
+    private User user;
     private int roomId;
+    private CategoryReviews categoryReviews;
+
+    public CategoryReviews getCategoryReviews() {
+        return categoryReviews;
+    }
+
+    //todo smth with method
+    public void setCategoryReviews(int comfortable, int fortunes, int soundproof, int service) {
+        this.categoryReviews = new CategoryReviews(comfortable, fortunes, soundproof, service);
+    }
 
     public int getId() {
         return id;
@@ -33,13 +43,6 @@ public class Review {
         this.date = date;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 
     public int getRoomId() {
         return roomId;
@@ -49,14 +52,57 @@ public class Review {
         this.roomId = roomId;
     }
 
-    @Override
-    public String toString() {
-        return "Review{" +
-                "id=" + id +
-                ", review='" + review + '\'' +
-                ", date=" + date +
-                ", userId=" + userId +
-                ", roomId=" + roomId +
-                '}';
+
+
+    public User getUser() {
+        return user;
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public static class CategoryReviews {
+        private int comfortable;
+        private int fortunes;
+        private int soundproof;
+        private int service;
+
+        public CategoryReviews(int comfortable, int fortunes, int soundproof, int service) {
+            this.comfortable = comfortable;
+
+            this.fortunes = fortunes;
+            this.soundproof = soundproof;
+            this.service = service;
+        }
+
+
+
+        public int getComfortable() {
+            return comfortable;
+        }
+
+        public int getFortunes() {
+            return fortunes;
+        }
+
+        public int getSoundproof() {
+            return soundproof;
+        }
+
+        public int getService() {
+            return service;
+        }
+
+        @Override
+        public String toString() {
+            return "CategoryReviews{" +
+                    "comfortable=" + comfortable +
+                    ", fortunes=" + fortunes +
+                    ", soundproof=" + soundproof +
+                    ", service=" + service +
+                    '}';
+        }
+    }
+
 }

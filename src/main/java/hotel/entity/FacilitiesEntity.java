@@ -1,23 +1,21 @@
 package hotel.entity;
 
 public class FacilitiesEntity {
-    private String text;
     private String id;
     private String path;
     private String enumName;
+    private String resourceName;
 
-    public FacilitiesEntity(String text, String path , String enumName) {
-        this.id=text.replace(System.lineSeparator(),"_");
-        this.text = text;
-        this.path = path;
+    public FacilitiesEntity(String path , String enumName, String resourceName) {
+        this(path,resourceName);
         this.enumName=enumName;
     }
 
 
-    public FacilitiesEntity(String text, String path ) {
-        this.id=text.replace(System.lineSeparator(),"_");
-        this.text = text;
+    public FacilitiesEntity(String path , String resourceName) {
+        this.id=resourceName;
         this.path = path;
+        this.resourceName=resourceName;
     }
 
     public String getEnumName() {
@@ -28,13 +26,7 @@ public class FacilitiesEntity {
         this.enumName = enumName;
     }
 
-    public String getText() {
-        return text;
-    }
 
-    public void setText(String text) {
-        this.text = text;
-    }
 
     public String getId() {
         return id;
@@ -55,9 +47,18 @@ public class FacilitiesEntity {
     @Override
     public String toString() {
         return "FacilitiesEntity{" +
-                "text='" + text + '\'' +
                 ", id='" + id + '\'' +
                 ", path='" + path + '\'' +
+                ", enumName='" + enumName + '\'' +
+                ", resourceName='" + resourceName + '\'' +
                 '}';
+    }
+
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
     }
 }

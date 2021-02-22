@@ -1,6 +1,18 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <% String strContextPath = request.getContextPath();%>
+<%@ page import="hotel.enums.ClassOfTheRoom" %>
+<%@ page import="hotel.enums.Role" %>
+
+<%@ page import="hotel.util.PopularFacilitiesToEntity" %>
+<%@ page import="java.util.List" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<% List<PopularFacilitiesToEntity.RowOfPopularFacilitiesToEntity> rowOfPopularFacilitiesToEntityList =
+        hotel.util.PopularFacilitiesToEntity.getListOfAmenitiesOfRoom();%>
+
+<fmt:setLocale value="${language}"/>
+<fmt:setBundle basename="resources"/>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,86 +25,34 @@
 
     <link rel="stylesheet" href="<%=strContextPath%>/view/style/modalWindow.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 
 </head>
 
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Hotel</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<form action="<%=strContextPath%>/signIn" method="post">
+    <jsp:include page="myAccount/includedPage/navbar.jsp"/>
+</form>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-        </ul>
-
-        <form class="form-inline my-2 my-lg-0">
-
-
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle ml-4" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-globe2"></i> Language
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <a class="dropdown-item" href="#!">English</a>
-                    <a class="dropdown-item" href="#!">Ukranian</a>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-                <i class="bi bi-person-circle"></i> Sign in
-            </button>
-
-
-            <!-- Modal HTML -->
-            <div id="myModal" class="modal fade">
-                <div class="modal-dialog modal-login">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Member Login</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="/examples/actions/confirmation.php" method="post">
-                                <div class="form-group">
-                                    <i class="fa fa-user"></i>
-                                    <input type="text" class="form-control mt-4 ml-auto mr-auto" placeholder="Username" required="required">
-                                </div>
-                                <div class="form-group">
-                                    <i class="fa fa-lock"></i>
-                                    <input type="password" class="form-control mt-2 ml-auto mr-auto" placeholder="Password" required="required">
-                                </div>
-                                <div class="form-group">
-                                    <input type="submit" class="btn btn-primary btn-block btn-lg mt-4" value="Login">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="#">Forgot Password?</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </form>
-    </div>
-</nav>
-
-<form method="post" action="/Hotel_EPAM_final_project_war/addRoom?id=${hotel_id}">
-    <div class="container">
+<form onsubmit='redirect();return false;' method="post">
+    <div class="container ">
         <div class="row mt-5 pt-5">
             <div class="col-1"></div>
-            <h2>Add Room</h2>
+            <h2><fmt:message key="add_new_room_jsp.add_room"/></h2>
             <div class="col-5"></div>
         </div>
         <div class="row mt-2">
             <div class="col-1"></div>
-            <div class="col-6">Name of room
-                <input name="class_of_room" class="form-control mr-sm-2 mt-2" type="text" placeholder="Search" aria-label="Search">
-                <span class="text-secondary ml-2 ">Guest will see this name when they search for a place to stay </span>
+            <div class="col-6"><fmt:message key="add_new_room_jsp.class_of_the_room"/><br>
+                <select name="class_of_room" class="custom-select" required>
+                    <option value="" selected disabled hidden><fmt:message key="room_jsp.choose_class_of_the_room"/></option>
+                    <option value="${ClassOfTheRoom.ECONOMY.name()}"><fmt:message key="class_of_the_room.economy"/></option>
+                    <option value="${ClassOfTheRoom.STANDARD.name()}"><fmt:message key="class_of_the_room.standard"/></option>
+                    <option value="${ClassOfTheRoom.SUPERIOR.name()}"><fmt:message key="class_of_the_room.superior"/></option>
+                    <option value="${ClassOfTheRoom.PREMIUM.name()}"><fmt:message key="class_of_the_room.premium"/></option>
+                </select>
             </div>
 
         </div>
@@ -100,15 +60,15 @@
         <div class="row mt-2">
             <div class="col-1"></div>
             <div class="col-6">No of room
-                <input name="No_of_room" class="form-control mr-sm-2 mt-2" type="text" placeholder="Search" aria-label="Search">
-                <span class="text-secondary ml-2 ">Guest will see this name when they search for a place to stay </span>
+                <input name="No_of_room" class="form-control mr-sm-2 mt-2" type="number" min="1" aria-label="Search"
+                       required>
             </div>
         </div>
 
 
         <div class="row mt-3">
             <div class="col-1"></div>
-            <div class="col-6">Count of users
+            <div class="col-6"><fmt:message key="add_new_room_jsp.count_of_clients"/>
 
                 <select name="count_of_client" class="custom-select">
 
@@ -123,11 +83,11 @@
         </div>
 
 
-
         <div class="row mt-2">
             <div class="col-1"></div>
-            <div class="col-6">Price per night
-                <input name="price_per_night" class="form-control mr-sm-2 mt-2" type="text" placeholder="Search" aria-label="Search">
+            <div class="col-6"><fmt:message key="add_new_room_jsp.price"/>
+                <input name="price_per_night" class="form-control mr-sm-2 mt-2" type="number" aria-label="Search"
+                       min="1" required>
             </div>
             <div class="col-1"></div>
         </div>
@@ -135,17 +95,20 @@
 
         <div class="row mt-2">
             <div class="col-1"></div>
-            <div class="col-6">area of room
-                <input name="area_of_room" class="form-control mr-sm-2 mt-2" type="text" placeholder="Search" aria-label="Search">
+            <div class="col-6"><fmt:message key="add_new_room_jsp.area_of_the_room"/>
+                <input name="area_of_room" class="form-control mr-sm-2 mt-2" type="number" aria-label="Search" min="5"
+                       required>
             </div>
             <div class="col-1"></div>
         </div>
 
         <div class="row mt-4">
             <div class="col-1"></div>
-            <div class="col-6">Description of Room
-                <span class="badge badge-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">?</span>
-                <textarea name="description" class="form-control" rows="3" style=" resize: none;"></textarea>
+            <div class="col-6"><fmt:message key="add_new_room_jsp.description"/>
+                <span class="badge badge-secondary" data-toggle="tooltip" data-placement="top"
+                      title="Tooltip on top">?</span>
+                <textarea name="description" class="form-control" rows="3" style=" resize: none;" required
+                          minlength="200" maxlength="500"></textarea>
 
             </div>
             <div class="col-1"></div>
@@ -154,23 +117,28 @@
         <hr>
         <div class="row mt-4">
             <div class="col-1"></div>
-            <h4>Facilities and Amenities</h4>
+            <h4><fmt:message key="add_new_room_jsp.facilities_and_amenities"/></h4>
             <div class="col-5"></div>
         </div>
 
         <div class="row mt-4">
             <div class="col-1"></div>
             <div class="col-10">
-                Best amenities in the room
+                <fmt:message key="add_new_room_jsp.best_amenities"/>
                 <div class="container mt-2">
-                    <c:forEach items="${amenities_of_room}" var="amenity_of_room">
+
+                    <c:forEach items="<%=rowOfPopularFacilitiesToEntityList%>" var="amenity_of_room">
 
 
                         <div class="row">
                             <div class="col-4">
                                 <div class="custom-control custom-checkbox">
-                                    <input name="case" type="checkbox" class="custom-control-input" id="${amenity_of_room.firstCol.id}" value="${amenity_of_room.firstCol.enumName}">
-                                    <label class="custom-control-label" for="${amenity_of_room.firstCol.id}">${amenity_of_room.firstCol.text}
+
+                                    <input name="case" type="checkbox" class="custom-control-input"
+                                           id="${amenity_of_room.firstCol.id}"
+                                           value="${amenity_of_room.firstCol.enumName}">
+                                    <label class="custom-control-label" for="${amenity_of_room.firstCol.id}">
+                                        <fmt:message key="amenities.${amenity_of_room.firstCol.resourceName}"/>
                                         <img
                                                 src="<%=strContextPath%>/${amenity_of_room.firstCol.path}"></label>
                                 </div>
@@ -179,10 +147,12 @@
                             <c:if test="${not empty amenity_of_room.secondCol}">
                                 <div class="col-4">
                                     <div class="custom-control custom-checkbox">
-                                        <input name="case" type="checkbox" class="custom-control-input" id="${amenity_of_room.secondCol.id}" value="${amenity_of_room.secondCol.enumName}">
-                                        <label class="custom-control-label" for="${amenity_of_room.secondCol.id}">${amenity_of_room.secondCol.text}
-                                            <img
-                                                    src="<%=strContextPath%>/${amenity_of_room.secondCol.path}"></label>
+                                        <input name="case" type="checkbox" class="custom-control-input"
+                                               id="${amenity_of_room.secondCol.id}"
+                                               value="${amenity_of_room.secondCol.enumName}">
+                                        <label class="custom-control-label" for="${amenity_of_room.secondCol.id}">
+                                            <fmt:message key="amenities.${amenity_of_room.secondCol.resourceName}"/>
+                                            <img src="<%=strContextPath%>/${amenity_of_room.secondCol.path}"></label>
                                     </div>
                                 </div>
                             </c:if>
@@ -191,10 +161,13 @@
                             <c:if test="${not empty amenity_of_room.thirdCol}">
                                 <div class="col-4">
                                     <div class="custom-control custom-checkbox">
-                                        <input name="case" type="checkbox" class="custom-control-input" id="${amenity_of_room.thirdCol.id}" value="${amenity_of_room.thirdCol.enumName}">
-                                        <label class="custom-control-label" for="${amenity_of_room.thirdCol.id}">${amenity_of_room.thirdCol.text}
-                                            <img
-                                                    src="<%=strContextPath%>/${amenity_of_room.thirdCol.path}"></label>
+                                        <input name="case" type="checkbox" class="custom-control-input"
+                                               id="${amenity_of_room.thirdCol.id}"
+                                               value="${amenity_of_room.thirdCol.enumName}">
+                                        <label class="custom-control-label" for="${amenity_of_room.thirdCol.id}">
+                                            <fmt:message key="amenities.${amenity_of_room.thirdCol.resourceName}"/>
+
+                                            <img src="<%=strContextPath%>/${amenity_of_room.thirdCol.path}"></label>
                                     </div>
                                 </div>
                             </c:if>
@@ -206,18 +179,17 @@
         </div>
 
 
-
-
         <div class="row mt-4">
             <div class="col-1"></div>
-            <div class="col-6">Additional services and amenities
-                <span class="badge badge-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">?</span>
-                <textarea name="additional_services" class="form-control" rows="4" style=" resize: none;"></textarea>
+            <div class="col-6"><fmt:message key="add_new_room_jsp.additional_services"/>
+                <span class="badge badge-secondary" data-toggle="tooltip" data-placement="top"
+                      title="Tooltip on top">?</span>
+                <textarea name="additional_services" class="form-control" rows="4" style=" resize: none;" required
+                          minlength="100" maxlength="300"></textarea>
 
             </div>
             <div class="col-1"></div>
         </div>
-
 
 
         <div class="row mt-2 ">
@@ -225,7 +197,8 @@
             <div class="col-6 "></div>
             <div class="col-4 ">
 
-                <input type="submit" class="btn btn-primary " value="Primary">
+                <input type="submit" class="btn btn-primary " value="<fmt:message key="add_new_room_jsp.create"/>"
+                       required>
 
             </div>
             <div class="col-1 "></div>
@@ -235,10 +208,17 @@
 
 </form>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.7/holder.min.js" integrity="sha512-O6R6IBONpEcZVYJAmSC+20vdsM07uFuGjFf0n/Zthm8sOFW+lAq/OK1WOL8vk93GBDxtMIy6ocbj6lduyeLuqQ==" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.7/holder.min.js"
+        integrity="sha512-O6R6IBONpEcZVYJAmSC+20vdsM07uFuGjFf0n/Zthm8sOFW+lAq/OK1WOL8vk93GBDxtMIy6ocbj6lduyeLuqQ=="
+        crossorigin="anonymous"></script>
 
 <script src="../js/filter.js"></script>
 
