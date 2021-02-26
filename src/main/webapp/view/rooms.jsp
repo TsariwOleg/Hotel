@@ -1,13 +1,12 @@
 <% String strContextPath = request.getContextPath();%>
 <% String strQuery = request.getQueryString().replaceAll("page=\\d+", "");%>
 <%@ page import="hotel.enums.ClassOfTheRoom" %>
-<%@ page language="java" contentType="text/html;charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="hotel.enums.Role" %>
 
-<% String language = request.getSession().getAttribute("language").toString();%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="<%=language%>"/>
-<fmt:setBundle basename="resources"/>
+<%@ page language="java" contentType="text/html;charset=UTF-8" %>
+
+<%@ include file="myAccount/directive/taglib.jspf" %>
+
 <!DOCTYPE html>
 <html>
 
@@ -49,29 +48,35 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <button class="dropdown-item" type="submit" name="sort_by_price_descending">
-                            <fmt:message key="rooms_jsp.sorting.by_price"/> <img src="<%=strContextPath%>/resources/rooms_icon/caret-down.png">
+                            <fmt:message key="rooms_jsp.sorting.by_price"/> <img
+                                src="<%=strContextPath%>/resources/rooms_icon/caret-down.png">
 
                         </button>
 
                         <button class="dropdown-item" type="submit" name="sort_by_price_ascending">
-                            <fmt:message key="rooms_jsp.sorting.by_price"/> <img src="<%=strContextPath%>/resources/rooms_icon/sort-up.png">
+                            <fmt:message key="rooms_jsp.sorting.by_price"/> <img
+                                src="<%=strContextPath%>/resources/rooms_icon/sort-up.png">
                         </button>
 
-                        <button class="dropdown-item" type="submit"  name="sort_by_count_of_clients_descending">
-                            <fmt:message key="rooms_jsp.sorting.by_count_of_clients"/> <img src="<%=strContextPath%>/resources/rooms_icon/caret-down.png">
+                        <button class="dropdown-item" type="submit" name="sort_by_count_of_clients_descending">
+                            <fmt:message key="rooms_jsp.sorting.by_count_of_clients"/> <img
+                                src="<%=strContextPath%>/resources/rooms_icon/caret-down.png">
                         </button>
 
-                        <button class="dropdown-item" type="submit"  name="sort_by_count_of_clients_ascending">
-                            <fmt:message key="rooms_jsp.sorting.by_count_of_clients"/> <img src="<%=strContextPath%>/resources/rooms_icon/sort-up.png">
+                        <button class="dropdown-item" type="submit" name="sort_by_count_of_clients_ascending">
+                            <fmt:message key="rooms_jsp.sorting.by_count_of_clients"/> <img
+                                src="<%=strContextPath%>/resources/rooms_icon/sort-up.png">
                         </button>
 
 
                         <button class="dropdown-item" type="submit" name="sort_by_class_descending">
-                            <fmt:message key="rooms_jsp.sorting.by_class"/> <img src="<%=strContextPath%>/resources/rooms_icon/caret-down.png">
+                            <fmt:message key="rooms_jsp.sorting.by_class"/> <img
+                                src="<%=strContextPath%>/resources/rooms_icon/caret-down.png">
                         </button>
 
                         <button class="dropdown-item" type="submit" name="sort_by_class_ascending">
-                            <fmt:message key="rooms_jsp.sorting.by_class"/> <img src="<%=strContextPath%>/resources/rooms_icon/sort-up.png">
+                            <fmt:message key="rooms_jsp.sorting.by_class"/> <img
+                                src="<%=strContextPath%>/resources/rooms_icon/sort-up.png">
                         </button>
 
 
@@ -245,7 +250,9 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <input type="text" id="start" class="form-control text-left"
-                                                           name="start_date" autocomplete="off">
+                                                           name="start_date" autocomplete="off"
+                                                           pattern="\d{2}-\d{2}-\d{4}"
+                                                           title="Wrong input pattern">
                                                     <span class="fa fa-calendar" id="fa-1"></span>
                                                 </div>
                                             </div>
@@ -261,7 +268,9 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <input type="text" id="end" class="form-control text-left"
-                                                           name="end_date" autocomplete="off">
+                                                           name="end_date" autocomplete="off"
+                                                           pattern="\d{2}-\d{2}-\d{4}"
+                                                           title="Wrong input pattern">
                                                     <span class="fa fa-calendar" id="fa-2"></span>
                                                 </div>
                                             </div>
@@ -281,239 +290,315 @@
 
 
                 <p>
-                    <input type="submit" class="btn btn-primary" value="<fmt:message key="rooms_jsp.filter"/>" name="filter_submit">
+                    <input type="submit" class="btn btn-primary" value="<fmt:message key="rooms_jsp.filter"/>"
+                           name="filter_submit">
                 </p>
             </div>
 
 
+            <div class="col-9 pl-4">
 
-                <div class="col-9 pl-4">
+                <c:forEach items="${rooms}" var="room">
 
-                    <c:forEach items="${rooms}" var="room">
-                        <div class="media">
-                            <img class="d-flex mr-3" data-src="holder.js/200x200?theme=sky"
-                                 alt="Generic placeholder image">
-                            <div class="media-body">
+                    <div class="media">
+
+                        <div class="container">
+                            <div class="row">
+
+                                <div class="col-7">
+                                    <div class="container">
+
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <c:if test="${empty room.strMainPhoto }">
+                                                <img class="d-flex mr-3" data-src="holder.js/200x200?theme=sky"
+                                                     alt="Generic placeholder image" >
+                                                </c:if>
+
+                                                <c:if test="${not empty room.strMainPhoto }">
+                                                <img class="d-flex mr-3"
+                                                     alt="Generic placeholder image"
+                                                     src="data:image/jpg;base64,${room.strMainPhoto}"
+                                                     width="200" height="200">
+                                                </c:if>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="container">
+                                                    <jsp:include page="myAccount/includedPage/name_of_room.jsp">
+                                                        <jsp:param name="count_of_clients"
+                                                                   value="${room.countOfClient}"/>
+                                                    </jsp:include>
+
+                                                    <div class="row mt-4 ml-2">
+                                                        <div class="col-12"></div>
+                                                            ${room.countOfClient}
+                                                        <c:forEach begin="1" end="${room.countOfClient}"
+                                                                   varStatus="loop">
+                                                            <img src="<%=strContextPath%>/resources/rooms_icon/user.png">
+                                                        </c:forEach>
+
+                                                    </div>
+
+                                                    <div class="row mt-5 ">
+                                                        <div class="col-8">
+                                                            <p>
+                                                                <a class="btn btn-link"
+                                                                   data-parent="#collapse-group"
+                                                                   data-toggle="collapse"
+                                                                   href="#reviewCollapse${room.id}"
+                                                                   aria-expanded="false"
+                                                                   aria-controls="collapseExample">
 
 
-                                <jsp:include page="myAccount/includedPage/name_of_room.jsp">
-                                    <jsp:param name="count_of_clients" value="${room.countOfClient}"/>
-                                </jsp:include>
+                                                                    <jsp:include page="myAccount/includedPage/room-rating.jsp">
+                                                                        <jsp:param name="total_ratting" value="${room.avgPoint}"/>
+                                                                    </jsp:include>
+                                                                    <i class="bi bi-chevron-down"></i>
 
-                                <div class="container">
-                                    <div class="row">
 
-                                        <div class="col-5">
-                                            <div class="container">
-                                                <div class="row mt-4">
-                                                    <div class="col-12"></div>
-                                                        ${room.countOfClient}
-                                                    <c:forEach begin="1" end="${room.countOfClient}" varStatus="loop">
-                                                        <img src="<%=strContextPath%>/resources/rooms_icon/user.png">
-                                                    </c:forEach>
+                                                                </a>
+
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
 
                                                 </div>
+                                            </div>
 
-                                                <div class="row mt-5 ">
-                                                    <div class="col-8">
-                                                        <p>
-                                                            <a class="btn btn-link" data-parent="#collapse-group"
-                                                               data-toggle="collapse" href="#reviewCollapse${room.id}"
-                                                               aria-expanded="false" aria-controls="collapseExample">
-                                                                <span class="badge badge-primary">7,7</span> Good <i
-                                                                    class="bi bi-chevron-down"></i>
-                                                            </a>
 
-                                                        </p>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="collapse" id="reviewCollapse${room.id}">
+                                                    <div class="card card-body mt-2 ">
+                                                        <div class="container">
+
+                                                            <c:set var="comfortable" value=" ${20*room.totalPoint.comfortable}"/>
+                                                            <div class="row">
+                                                                <div class="col-5 ">
+                                                                    <fmt:message
+                                                                        key="room_jsp.comfortable"/></div>
+                                                                <div class="col-5 mt-2">
+
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar" role="progressbar"
+                                                                             style="width: ${comfortable}%"
+                                                                             aria-valuenow="25" aria-valuemin="0"
+                                                                             aria-valuemax="100"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                        ${room.totalPoint.comfortable}
+                                                                </div>
+                                                            </div>
+
+
+                                                            <c:set var="fortunes"
+                                                                   value=" ${20*room.totalPoint.fortunes}"/>
+                                                            <div class="row mt-2">
+                                                                <div class="col-5 pr-1"><fmt:message
+                                                                        key="room_jsp.fortunes"/></div>
+                                                                <div class="col-5 mt-2">
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar" role="progressbar"
+                                                                             style="width: ${fortunes}%"
+                                                                             aria-valuenow="50" aria-valuemin="0"
+                                                                             aria-valuemax="100"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                        ${room.totalPoint.fortunes}
+                                                                </div>
+                                                            </div>
+
+                                                            <c:set var="soundproof"
+                                                                   value=" ${20*room.totalPoint.soundproof}"/>
+                                                            <div class="row mt-2">
+                                                                <div class="col-5 pr-1"><fmt:message
+                                                                        key="room_jsp.soundproof"/></div>
+                                                                <div class="col-5 mt-2">
+                                                                    <div class="progress">
+
+                                                                        <div class="progress-bar" role="progressbar"
+                                                                             style="width: ${soundproof}%"
+                                                                             aria-valuenow="50" aria-valuemin="0"
+                                                                             aria-valuemax="100"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                        ${room.totalPoint.soundproof}
+                                                                </div>
+                                                            </div>
+
+
+                                                            <c:set var="service"
+                                                                   value=" ${20*room.totalPoint.service}"/>
+                                                            <div class="row mt-2">
+                                                                <div class="col-5 pr-1"><fmt:message
+                                                                        key="room_jsp.service"/></div>
+                                                                <div class="col-5 mt-2">
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar" role="progressbar"
+                                                                             style="width: ${service}%"
+                                                                             aria-valuenow="50" aria-valuemin="0"
+                                                                             aria-valuemax="100"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                        ${room.totalPoint.service}
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
                                                     </div>
                                                 </div>
-
-
                                             </div>
                                         </div>
 
 
-                                        <div class="col-7 ">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <p class="card-text">
-                                                            ${room.description}
-                                                    </p>
-                                                    <p><strong>
-                                                        <fmt:message key="rooms_jsp.class_of_the_room"/>
-                                                        :  <fmt:message key="class_of_the_room.${room.classOfTheRoom.name().toLowerCase()}"/>.</strong></p>
-                                                    <p><strong><fmt:message key="rooms_jsp.price"/> : ${room.price}.</strong></p>
-                                                    <p><strong><fmt:message key="rooms_jsp.area_of_the_room"/> : ${room.areaOfRoom}.</strong></p>
-
-                                                    <c:if test="${not empty id_client}">
-                                                        <form method="post"
-                                                              action="<%=strContextPath%>/roomRequest?selectRoomFor=${id_client}">
-                                                            <button type="submit" class="btn btn-primary " name="select"
-                                                                    value="${room.id}">
-                                                                Create request
-                                                            </button>
-                                                        </form>
-                                                    </c:if>
-
-                                                    <a href="${pageContext.request.contextPath}/room?id=${room.id}"
-                                                       class="btn btn-primary mt-2"><fmt:message key="rooms_jsp.watch"/></a>
-
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="collapse" id="reviewCollapse${room.id}">
-                                    <div class="card card-body mt-2 ">
-                                        <div class="container ">
+                                <div class="col-5">
+                                    <div class="media-body">
+
+
+                                        <div class="container">
                                             <div class="row">
-                                                <div class="col-3 ">Location</div>
-                                                <div class="col-5 mt-2 mr-0">
 
-                                                    <div class="progress">
-                                                        <div class="progress-bar" role="progressbar" style="width: 25%"
-                                                             aria-valuenow="25" aria-valuemin="0"
-                                                             aria-valuemax="100"></div>
+
+                                                <div class="col-12 ">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <p class="card-text">
+                                                                    ${room.description}
+                                                            </p>
+                                                            <p><strong>
+                                                                <fmt:message key="rooms_jsp.class_of_the_room"/>
+                                                                : <fmt:message
+                                                                    key="class_of_the_room.${room.classOfTheRoom.name().toLowerCase()}"/>.</strong>
+                                                            </p>
+                                                            <p><strong><fmt:message key="rooms_jsp.price"/>
+                                                                : ${room.price}.</strong></p>
+                                                            <p><strong><fmt:message key="rooms_jsp.area_of_the_room"/>
+                                                                : ${room.areaOfRoom}.</strong></p>
+
+
+
+
+                                                            <c:set value='<%=request.getParameter("selectRoomFor")%>' var="idClient"/>
+
+                                                            <c:if test="${not empty idClient and sessionScope.role eq Role.MANAGER.name()}">
+                                                                <form method="post"
+                                                                      action="<%=strContextPath%>/roomRequest?selectRoomFor=${id_client}">
+                                                                    <button type="submit" class="btn btn-primary "
+                                                                            name="select"
+                                                                            value="${room.id}">
+                                                                        Create request
+                                                                    </button>
+                                                                </form>
+                                                            </c:if>
+
+                                                            <a href="${pageContext.request.contextPath}/room?id=${room.id}"
+                                                               class="btn btn-primary mt-2"><fmt:message
+                                                                    key="rooms_jsp.watch"/></a>
+
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-4">
-                                                    Good(7.7/10)
-                                                </div>
                                             </div>
-
-
-                                            <div class="row mt-2">
-                                                <div class="col-3 pr-1"> Room</div>
-                                                <div class="col-5 mt-2">
-                                                    <div class="progress">
-                                                        <div class="progress-bar" role="progressbar" style="width: 50%"
-                                                             aria-valuenow="50" aria-valuemin="0"
-                                                             aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-4">
-                                                    Very good(9.7/10)
-                                                </div>
-                                            </div>
-
-
-                                            <div class="row mt-2">
-                                                <div class="col-3 pr-1"> Service</div>
-                                                <div class="col-5 mt-2">
-                                                    <div class="progress">
-                                                        <div class="progress-bar" role="progressbar" style="width: 50%"
-                                                             aria-valuenow="50" aria-valuemin="0"
-                                                             aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-4">
-                                                    Fair(9.7/10)
-                                                </div>
-                                            </div>
-
-
-                                            <div class="row mt-2">
-                                                <div class="col-3 pr-1"> Value for money</div>
-                                                <div class="col-5 mt-2">
-                                                    <div class="progress">
-                                                        <div class="progress-bar" role="progressbar" style="width: 50%"
-                                                             aria-valuenow="50" aria-valuemin="0"
-                                                             aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-4">
-                                                    Excellent(9.7/10)
-                                                </div>
-                                            </div>
-
                                         </div>
+
+
                                     </div>
                                 </div>
-
 
                             </div>
                         </div>
-                        <hr>
-                    </c:forEach>
+                    </div>
+                    <hr>
+                </c:forEach>
 
 
-                </div>
-
-        </div>
-
-<c:if test="${rooms.size()!=0}">
-        <div class="row">
-            <div class="col-6"></div>
-            <div class="col-3">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="<%=strContextPath%>/rooms?page=0<%=strQuery%>"
-                               aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                        </li>
-
-
-                        <c:if test="${page>2 && page!=room_list_size }">
-                            <c:forEach begin="${page-2}" end="${page+1}" varStatus="loop" var="page">
-
-                                <li class="page-item"><a class="page-link"
-                                                         href="<%=strContextPath%>/rooms?page=${page}<%=strQuery%>">${page+1}</a>
-                                </li>
-                            </c:forEach>
-                        </c:if>
-
-
-                        <c:if test="${page==0 || page==1 || page==2}">
-
-                            <c:choose>
-                                <c:when test="${room_list_size>=4}">
-                                    <c:set var="page" value="${3}"/>
-                                </c:when>
-                                <c:otherwise>
-
-                                    <c:set var="page" value="${room_list_size}"/>
-                                </c:otherwise>
-                            </c:choose>
-
-
-                            <c:forEach begin="0" end="${page}" varStatus="loop" var="page">
-                                <li class="page-item"><a class="page-link"
-                                                         href="<%=strContextPath%>/rooms?page=${page}<%=strQuery%>">${page+1}</a>
-                                </li>
-                            </c:forEach>
-                        </c:if>
-
-
-
-
-                        <c:if test="${page==room_list_size && room_list_size!=0 && page!=0 && page!=1 && page!=2}">
-
-                            <c:forEach begin="${room_list_size-3}" end="${room_list_size}" varStatus="loop" var="page">
-                                <li class="page-item">
-                                    <a class="page-link" href="<%=strContextPath%>/rooms?page=${page}<%=strQuery%>">
-                                            ${page+1}
-                                    </a>
-                                </li>
-                            </c:forEach>
-                        </c:if>
-
-
-                        <li class="page-item">
-                            <a class="page-link" href="<%=strContextPath%>/rooms?page=${room_list_size}<%=strQuery%>"
-                               aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
             </div>
+
         </div>
-</c:if>
+
+        <c:if test="${rooms.size()!=0}">
+            <div class="row">
+                <div class="col-6"></div>
+                <div class="col-3">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="<%=strContextPath%>/rooms?page=0<%=strQuery%>"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+
+
+                            <c:if test="${page>2 && page!=room_list_size }">
+                                <c:forEach begin="${page-2}" end="${page+1}" varStatus="loop" var="page">
+
+                                    <li class="page-item"><a class="page-link"
+                                                             href="<%=strContextPath%>/rooms?page=${page}<%=strQuery%>">${page+1}</a>
+                                    </li>
+                                </c:forEach>
+                            </c:if>
+
+
+                            <c:if test="${page==0 || page==1 || page==2}">
+
+                                <c:choose>
+                                    <c:when test="${room_list_size>=4}">
+                                        <c:set var="page" value="${3}"/>
+                                    </c:when>
+                                    <c:otherwise>
+
+                                        <c:set var="page" value="${room_list_size}"/>
+                                    </c:otherwise>
+                                </c:choose>
+
+
+                                <c:forEach begin="0" end="${page}" varStatus="loop" var="page">
+                                    <li class="page-item"><a class="page-link"
+                                                             href="<%=strContextPath%>/rooms?page=${page}<%=strQuery%>">${page+1}</a>
+                                    </li>
+                                </c:forEach>
+                            </c:if>
+
+
+                            <c:if test="${page==room_list_size && room_list_size!=0 && page!=0 && page!=1 && page!=2}">
+
+                                <c:forEach begin="${room_list_size-3}" end="${room_list_size}" varStatus="loop"
+                                           var="page">
+                                    <li class="page-item">
+                                        <a class="page-link" href="<%=strContextPath%>/rooms?page=${page}<%=strQuery%>">
+                                                ${page+1}
+                                        </a>
+                                    </li>
+                                </c:forEach>
+                            </c:if>
+
+
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="<%=strContextPath%>/rooms?page=${room_list_size}<%=strQuery%>"
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </c:if>
 
     </div>
 </form>

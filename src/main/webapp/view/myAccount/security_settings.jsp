@@ -1,10 +1,8 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" %>
 <% String strContextPath = request.getContextPath();%>
 
-<% String language = request.getSession().getAttribute("language").toString();%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="<%=language%>"/>
-<fmt:setBundle basename="resources"/>
+<%@ include file="directive/taglib.jspf" %>
+
 <!DOCTYPE html>
 <html>
 

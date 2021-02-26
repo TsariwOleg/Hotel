@@ -11,7 +11,15 @@ public class User {
     private int accessId;
     private int settingsId;
     private Role role;
+    private String language;
 
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
     public String getPassword() {
         return password;
@@ -85,8 +93,11 @@ public class User {
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", accessId=" + accessId +
                 ", settingsId=" + settingsId +
+                ", role=" + role +
+                ", language='" + language + '\'' +
                 '}';
     }
 }

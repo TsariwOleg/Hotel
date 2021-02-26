@@ -27,8 +27,6 @@ public class Rooms extends HttpServlet {
        req.setAttribute("language",req.getSession().getAttribute("language"));
 
 
-
-
         DAORoom daoRoom = new DAORoom();
         List<Room> roomList = daoRoom.getAllRooms();
 
@@ -81,7 +79,6 @@ public class Rooms extends HttpServlet {
         int page = Integer.parseInt(req.getParameter("page"));
         int roomListSize = (roomList.size())%5==0?roomList.size()/5-1:roomList.size()/5;
 
-        System.out.println(roomListSize);
         req.setAttribute("room_list_size",roomListSize);
 
         req.setAttribute("page",page);
@@ -94,6 +91,7 @@ public class Rooms extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String queryString = req.getQueryString() == null ? "" : req.getQueryString();
         queryString= queryString.replaceAll("&error=.+","");
+
 
         if (req.getParameter("filter_submit") != null) {
 
@@ -122,19 +120,12 @@ public class Rooms extends HttpServlet {
                 filtering.append("&");
             }
 
-            //todo not empty
+
             if (req.getParameter("start_date") != null && !req.getParameter("start_date").isEmpty()
                     && req.getParameter("end_date") != null && !req.getParameter("end_date").isEmpty()) {
-                Pattern pattern = Pattern.compile("\\d{2}-\\d{2}-\\d{4}");
+
                 String startDateReq = req.getParameter("start_date");
                 String endDateReq = req.getParameter("end_date");
-
-                if(!pattern.matcher(startDateReq).matches() || !pattern.matcher(endDateReq).matches()){
-                    String returnedURL = req.getRequestURL().toString()+"?"+queryString+"&error=FormatDateError";
-                    resp.sendRedirect(returnedURL);
-                    return;
-                }
-
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 LocalDate startDate = LocalDate.parse(req.getParameter("start_date"), formatter);

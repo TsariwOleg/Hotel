@@ -18,29 +18,7 @@ public class Orders extends HttpServlet {
         String role = req.getSession().getAttribute("role").toString();
 
 
-        if (req.getParameter("deleteOrder")!=null){
-            try {
-                int idOrderForDeleting = Integer.parseInt(req.getParameter("deleteOrder"));
-                daoOrder.deleteOrder(idOrderForDeleting);
-            }catch (ClassCastException e){
-                System.err.println(e);
-            }
-            resp.sendRedirect(req.getContextPath()+"/orders");
-            return;
-        }
 
-        if (req.getParameter("payForTheOrder")!=null && !role.equals(Role.MANAGER.toString())){
-            try {
-                int idOrderForDeleting = Integer.parseInt(req.getParameter("payForTheOrder"));
-                daoOrder.payForTheOrder(idOrderForDeleting);
-            }catch (ClassCastException e){
-                System.err.println(e);
-            }
-            resp.sendRedirect(req.getContextPath()+"/orders");
-            return;
-        }
-
-        req.setAttribute("role",role);
         if (role.equals(Role.CLIENT.toString())){
             int id = Integer.parseInt(req.getSession().getAttribute("id").toString());
             req.setAttribute("orders",daoOrder.getOrderById(id));
@@ -54,8 +32,32 @@ public class Orders extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println(req.getParameter("check"));
-        System.out.println(req.getParameter("check sdf"));
+        DAOOrder daoOrder = new DAOOrder();
+
+        if (req.getParameter("payForTheOrder")!=null){
+            try {
+                int idOrderForDeleting = Integer.parseInt(req.getParameter("payForTheOrder"));
+                daoOrder.payForTheOrder(idOrderForDeleting);
+            }catch (ClassCastException e){
+                System.err.println(e);
+            }
+            resp.sendRedirect(req.getContextPath()+"/orders");
+            return;
+        }
+
+
+        if (req.getParameter("deleteOrder")!=null){
+            try {
+                int idOrderForDeleting = Integer.parseInt(req.getParameter("deleteOrder"));
+                daoOrder.deleteOrder(idOrderForDeleting);
+            }catch (ClassCastException e){
+                System.err.println(e);
+            }
+            resp.sendRedirect(req.getContextPath()+"/orders");
+            return;
+        }
+
+
         super.doPost(req, resp);
     }
 }

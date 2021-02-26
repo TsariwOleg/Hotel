@@ -50,6 +50,7 @@ public class SignUp extends HttpServlet {
             user.setRole(Role.CLIENT);
         }
 
+        user.setLanguage(req.getSession().getAttribute("language").toString());
         daoUser.add(user);
         resp.sendRedirect(req.getContextPath()+"/rooms");
     }

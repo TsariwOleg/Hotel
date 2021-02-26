@@ -25,7 +25,6 @@ public class PopularFacilitiesToEntity {
                     popularFacilities[i].getResourceName()
             );
 
-            System.out.println(firstCol);
             if ((i + 1) < popularFacilities.length) {
                 secondCol = new FacilitiesEntity( popularFacilities[i + 1].getPathToIMG(),
                         popularFacilities[i + 1].name(),

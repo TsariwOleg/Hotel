@@ -29,10 +29,11 @@ public class SignIn extends HttpServlet {
         DAOUser daoUser = new DAOUser();
 
         User user = daoUser.checkAccess(req.getParameter("email"), req.getParameter("password"));
+
         if (user != null) {
-            System.out.println(user);
             req.getSession().setAttribute("id", user.getId());
             req.getSession().setAttribute("role",user.getRole().toString());
+            req.getSession().setAttribute("language",user.getLanguage());
             resp.sendRedirect(req.getContextPath() + "/rooms");
             return;
         }

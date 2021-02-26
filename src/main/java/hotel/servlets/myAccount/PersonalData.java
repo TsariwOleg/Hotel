@@ -18,7 +18,7 @@ public class PersonalData extends HttpServlet {
         DAOUser daoUser = new DAOUser();
 
         int id = Integer.parseInt(req.getSession().getAttribute("id").toString());
-        req.setAttribute("role",req.getSession().getAttribute("role").toString());
+
         User user = daoUser.get(id);
         req.setAttribute("user",user);
         req.getRequestDispatcher("view/myAccount/personal_data.jsp").forward(req, resp);

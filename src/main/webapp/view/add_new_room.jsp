@@ -1,17 +1,16 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="myAccount/directive/taglib.jspf" %>
+
 <% String strContextPath = request.getContextPath();%>
 <%@ page import="hotel.enums.ClassOfTheRoom" %>
-<%@ page import="hotel.enums.Role" %>
 
 <%@ page import="hotel.util.PopularFacilitiesToEntity" %>
 <%@ page import="java.util.List" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <% List<PopularFacilitiesToEntity.RowOfPopularFacilitiesToEntity> rowOfPopularFacilitiesToEntityList =
         hotel.util.PopularFacilitiesToEntity.getListOfAmenitiesOfRoom();%>
 
-<fmt:setLocale value="${language}"/>
-<fmt:setBundle basename="resources"/>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,7 +35,7 @@
     <jsp:include page="myAccount/includedPage/navbar.jsp"/>
 </form>
 
-<form onsubmit='redirect();return false;' method="post">
+<form onsubmit='redirect();return false;' method="post" enctype="multipart/form-data">
     <div class="container ">
         <div class="row mt-5 pt-5">
             <div class="col-1"></div>
@@ -179,6 +178,7 @@
         </div>
 
 
+
         <div class="row mt-4">
             <div class="col-1"></div>
             <div class="col-6"><fmt:message key="add_new_room_jsp.additional_services"/>
@@ -186,6 +186,38 @@
                       title="Tooltip on top">?</span>
                 <textarea name="additional_services" class="form-control" rows="4" style=" resize: none;" required
                           minlength="100" maxlength="300"></textarea>
+
+            </div>
+            <div class="col-1"></div>
+        </div>
+
+
+        <hr>
+        <div class="row mt-4">
+            <div class="col-1"></div>
+            <h4>Фото</h4>
+            <div class="col-5"></div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-1"></div>
+            <div class="col-6">Головне фото
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="main_photo" id="customFile" required accept="image/*,image/jpeg">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
+
+            </div>
+            <div class="col-1"></div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-1"></div>
+            <div class="col-6">Додаткові фото
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="photos" id="customFilek" required multiple accept="image/*,image/jpeg">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
 
             </div>
             <div class="col-1"></div>
@@ -221,7 +253,13 @@
         crossorigin="anonymous"></script>
 
 <script src="../js/filter.js"></script>
-
+<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>
 
 </body>
 

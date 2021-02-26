@@ -7,15 +7,19 @@ import hotel.util.ConnectionUtil;
 import hotel.util.PopularFacilitiesToEntity;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @WebServlet("/addRoom")
+@MultipartConfig(maxFileSize = 16177215)
 public class AddRoom extends HttpServlet {
 
 
@@ -44,8 +48,13 @@ public class AddRoom extends HttpServlet {
         room.setAmenitiesOfRoom(Arrays.asList(req.getParameterValues("case")));
         room.setAdditionalServices(req.getParameter("additional_services"));
 
+        room.setPhotos(req.getParts().stream().filter(x->x.getContentType()!=null).collect(Collectors.toList()));
+
+
+
         DAORoom daoRoom = new DAORoom();
         daoRoom.add(room);
+
         resp.sendRedirect(req.getContextPath()+"/rooms");
     }
 

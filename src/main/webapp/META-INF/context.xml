@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context>
+
+    <Resource maxIdle="20" maxTotal="100"
+              validationQuery="select 1"
+              url="jdbc:h2:~/Hotels;AUTO_RECONNECT=TRUE"
+              driverClassName="org.h2.Driver"
+              password=""
+              username="user"
+              type="javax.sql.DataSource"
+              auth="Container"
+              name="jdbc/h2PoolCon"/>
+
+</Context>

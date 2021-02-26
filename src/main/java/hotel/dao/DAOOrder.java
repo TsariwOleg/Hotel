@@ -7,11 +7,12 @@ import hotel.enums.ClassOfTheRoom;
 import hotel.util.ConnectionUtil;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DAOOrder {
-    private static String SQL_INSERT_INTO_ORDERS = "insert into Orders(id_client,id_room,DateOccupied,DateВeparture,Notes) values(?,?,?,?,?)";
+    private static String SQL_INSERT_INTO_ORDERS = "insert into Orders(id_client,id_room,date_Of_Creating,DateOccupied,DateВeparture,Notes) values(?,?,?,?,?,?)";
     private static String SQL_INSERT_INTO_ROOMS_ORDERS = "insert into ROOMS_orders values(?,?)";
 
     private static String SQL_SELECT_ORDERS_BY_CLIENT_ID =
@@ -21,14 +22,15 @@ public class DAOOrder {
     private static String SQL_SELECT_ORDERS =
             "SELECT * FROM ORDERS o INNER JOIN ROOMS r ON o.ID_ROOM =r.ID INNER JOIN CLIENTS c2 ON o.ID_CLIENT = c2.ID ";
 
-    private static String SQL_SELECT_ORDERS_RANGE="SELECT * FROM ORDERS o WHERE ( DATEOCCUPIED<? AND ?<=DATEВEPARTURE ) AND " +
+    private static String SQL_SELECT_ORDERS_RANGE = "SELECT * FROM ORDERS o WHERE ( DATEOCCUPIED<? AND ?<=DATEВEPARTURE ) AND " +
             " ID_ROOM=?";
 
 
+    private static String SQL_DELETE_ORDER_BY_ID = "DELETE FROM ORDERS WHERE ID=?";
 
-    private static  String SQL_DELETE_ORDER_BY_ID="DELETE FROM ORDERS WHERE ID=?";
+    private static String SQL_UPDATE_ORDER_BY_ID = "UPDATE ORDERS SET STATUS='true' where ID=?";
 
-    private static  String SQL_UPDATE_ORDER_BY_ID="UPDATE ORDERS SET STATUS='true' where ID=?";
+    private static String SQL_DELETE_OLD_ORDER = "DELETE FROM ORDERS WHERE date_Of_Creating<?";
 
 
     public void add(Order order) {
@@ -38,9 +40,10 @@ public class DAOOrder {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_INSERT_INTO_ORDERS);
             preparedStatement.setInt(1, order.getIdClient());
             preparedStatement.setInt(2, order.getIdRoom());
-            preparedStatement.setDate(3, Date.valueOf(order.getStartDate()));
-            preparedStatement.setDate(4, Date.valueOf(order.getEndDate()));
-            preparedStatement.setString(5, order.getNote());
+            preparedStatement.setDate(3, Date.valueOf(order.getDateOfCreating()));
+            preparedStatement.setDate(4, Date.valueOf(order.getStartDate()));
+            preparedStatement.setDate(5, Date.valueOf(order.getEndDate()));
+            preparedStatement.setString(6, order.getNote());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -51,28 +54,28 @@ public class DAOOrder {
     }
 
 
-    public void deleteOrder(int id){
+    public void deleteOrder(int id) {
         PreparedStatement preparedStatement = null;
         try {
-            preparedStatement=ConnectionUtil.getConnection().prepareStatement(SQL_DELETE_ORDER_BY_ID);
-            preparedStatement.setInt(1,id);
+            preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_DELETE_ORDER_BY_ID);
+            preparedStatement.setInt(1, id);
             preparedStatement.execute();
-        }catch (SQLException e){
-        System.err.println(e);
-        }finally {
+        } catch (SQLException e) {
+            System.err.println(e);
+        } finally {
             ConnectionUtil.closePreparedStatement(preparedStatement);
         }
     }
 
-    public void payForTheOrder(int id){
+    public void payForTheOrder(int id) {
         PreparedStatement preparedStatement = null;
         try {
-            preparedStatement=ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_ORDER_BY_ID);
-            preparedStatement.setInt(1,id);
+            preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_ORDER_BY_ID);
+            preparedStatement.setInt(1, id);
             preparedStatement.execute();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e);
-        }finally {
+        } finally {
             ConnectionUtil.closePreparedStatement(preparedStatement);
         }
     }
@@ -108,6 +111,7 @@ public class DAOOrder {
                 room.setClassOfTheRoom(ClassOfTheRoom.valueOf(resultSet.getString("CLASS_OF_ROOM")));
                 Order order = new Order();
                 order.setId(resultSet.getInt(1));
+                order.setDateOfCreating(resultSet.getDate("date_Of_Creating").toLocalDate());
                 order.setStartDate(resultSet.getDate("DateOccupied").toLocalDate());
                 order.setEndDate(resultSet.getDate("DATEВEPARTURE").toLocalDate());
                 order.setNote(resultSet.getString("Notes"));
@@ -126,20 +130,20 @@ public class DAOOrder {
     }
 
 
-    public boolean checkDate(Order order){
+    public boolean checkDate(Order order) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            preparedStatement=ConnectionUtil.getConnection().prepareStatement(SQL_SELECT_ORDERS_RANGE);
-            preparedStatement.setDate(1,Date.valueOf(order.getEndDate()));
-            preparedStatement.setDate(2,Date.valueOf(order.getStartDate()));
-            preparedStatement.setInt(3,order.getIdRoom());
-            resultSet=preparedStatement.executeQuery();
+            preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_SELECT_ORDERS_RANGE);
+            preparedStatement.setDate(1, Date.valueOf(order.getEndDate()));
+            preparedStatement.setDate(2, Date.valueOf(order.getStartDate()));
+            preparedStatement.setInt(3, order.getIdRoom());
+            resultSet = preparedStatement.executeQuery();
 
             return resultSet.next();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e);
-        }finally {
+        } finally {
             ConnectionUtil.closeResultSet(resultSet);
             ConnectionUtil.closePreparedStatement(preparedStatement);
         }
@@ -162,6 +166,7 @@ public class DAOOrder {
                 room.setClassOfTheRoom(ClassOfTheRoom.valueOf(resultSet.getString("CLASS_OF_ROOM")));
                 Order order = new Order();
                 order.setId(resultSet.getInt(1));
+                order.setDateOfCreating(resultSet.getDate("date_Of_Creating").toLocalDate());
                 order.setStartDate(resultSet.getDate("DateOccupied").toLocalDate());
                 order.setEndDate(resultSet.getDate("DATEВEPARTURE").toLocalDate());
                 order.setNote(resultSet.getString("Notes"));
@@ -185,5 +190,19 @@ public class DAOOrder {
             ConnectionUtil.closeStatement(statement);
         }
         return orderList;
+    }
+
+
+    public void deleteOldOrders(LocalDate localDate) {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_DELETE_OLD_ORDER);
+            preparedStatement.setDate(1, Date.valueOf(localDate));
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            System.err.println(e);
+        } finally {
+            ConnectionUtil.closePreparedStatement(preparedStatement);
+        }
     }
 }

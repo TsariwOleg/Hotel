@@ -1,14 +1,14 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="directive/taglib.jspf" %>
+
+
 <% String strContextPath = request.getContextPath();%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
-<% String language = request.getSession().getAttribute("language").toString();%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="<%=language%>"/>
-<fmt:setBundle basename="resources"/>
+<%@ page import="hotel.enums.Role" %>
+
 
 <!DOCTYPE html>
-<html lang="en">
+<html >
 
 <head>
 
@@ -71,13 +71,18 @@
                                             <div class="row">
 
                                                 <div class="col-5">
+                                                   <c:if test="${not empty order.note}">
+                                                       <p class="text-secondary">
+                                                               ${order.note}
+                                                       </p>
+                                                   </c:if>
                                                 </div>
 
 
                                                 <div class="col-7 ">
                                                     <div class="card">
                                                         <div class="card-body">
-                                                            <strong><fmt:message key="my_orders_jsp.price"/> : ${order.room.price}.</strong><br>
+                                                            <strong><fmt:message key="my_orders_jsp.price"/> : ${order.totalPrice}.</strong><br>
                                                             <strong><fmt:message key="my_orders_jsp.check_in_date"/> : ${order.startDate}.</strong><br>
                                                             <strong><fmt:message key="my_orders_jsp.check_out_date"/> : ${order.endDate}.</strong><br>
 
@@ -87,26 +92,26 @@
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     <strong><fmt:message key="my_orders_jsp.status"/> : <fmt:message key="my_orders_jsp.not_paid"/>.</strong><br>
-                                                                    <c:if test="${role eq 'CLIENT'}">
-                                                                    <a class="btn btn-secondary ml-1 mt-2"
-                                                                       href="<%=strContextPath%>/orders?payForTheOrder=${order.id}">
-                                                                        <fmt:message key="my_orders_jsp.pay"/>
-                                                                    </a>
+                                                                    <c:if test="${sessionScope.role eq Role.CLIENT.name()}">
+                                                                        <button type="submit" class="btn btn-secondary" name="payForTheOrder" value="${order.id}">
+                                                                            <fmt:message key="my_orders_jsp.pay"/>
+                                                                        </button>
                                                                     </c:if>
                                                                 </c:otherwise>
                                                             </c:choose>
 
-                                                            <c:if test="${role eq 'MANAGER'}">
+                                                            <c:if test="${sessionScope.role eq Role.MANAGER.name()}">
                                                                 <strong><fmt:message key="my_orders_jsp.client"/> :
                                                                         ${order.user.name} ${order.user.surname}.
                                                                 </strong>
                                                                 <br>
                                                             </c:if>
 
-                                                            <a class="btn btn-secondary ml-1 mt-2"
-                                                               href="<%=strContextPath%>/orders?deleteOrder=${order.id}">
+
+
+                                                            <button type="submit" class="btn btn-secondary mt-2" name="deleteOrder" value="${order.id}">
                                                                 <fmt:message key="my_orders_jsp.delete_order"/>
-                                                            </a>
+                                                            </button>
 
                                                         </div>
                                                     </div>

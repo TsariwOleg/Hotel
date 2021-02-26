@@ -1,11 +1,10 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" %>
-<% String strContextPath = request.getContextPath();%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<% String language = request.getSession().getAttribute("language").toString();%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="<%=language%>"/>
-<fmt:setBundle basename="resources"/>
+<%@ include file="directive/taglib.jspf" %>
+
+
+<% String strContextPath = request.getContextPath();%>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,7 +47,7 @@
                 <div class="row mt-3">
                     <div class="col-9"><img src="<%=strContextPath%>/resources/myAccount_icon/name.png">
                         <fmt:message key="personal_data_jsp.name"/>: &nbsp;&nbsp;&nbsp;${user.name} ${user.surname}
-                        <c:if test="${role eq 'MANAGER'}">
+                        <c:if test="${sessionScope.role eq 'MANAGER'}">
                         &nbsp;&nbsp;<span class="badge badge-success"><fmt:message key="personal_data_jsp.manager"/></span>
                     </c:if>
                     </div>

@@ -34,7 +34,6 @@ public class RoomRequest extends HttpServlet {
         }
 
         req.setAttribute("requests", requests);
-        req.setAttribute("role", req.getSession().getAttribute("role").toString());
         req.getRequestDispatcher("view/myAccount/room_request.jsp").forward(req, resp);
     }
 
@@ -91,10 +90,19 @@ public class RoomRequest extends HttpServlet {
             String requestEndDate = !req.getParameter("end_date").isEmpty() ?
                     req.getParameter("end_date") : req.getParameter("end_edited_date");
 
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate startDate = LocalDate.parse(requestStartDate,formatter);
+            LocalDate endDate = LocalDate.parse(requestEndDate,formatter);
+
+            if (startDate.isEqual(endDate) ||
+                    startDate.isBefore(LocalDate.now())) {
+                resp.sendRedirect(req.getRequestURL().toString() + "?error=DataInputError");
+                return;
+            }
+
             if (!requestStartDate.isEmpty() && !requestEndDate.isEmpty()) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                request.setStartDate(LocalDate.parse(requestStartDate, formatter));
-                request.setEndDate(LocalDate.parse(requestEndDate, formatter));
+                request.setStartDate(startDate);
+                request.setEndDate(endDate);
             }
         }
 

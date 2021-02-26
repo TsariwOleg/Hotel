@@ -1,10 +1,9 @@
 <% String strContextPath = request.getContextPath();%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html;charset=UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<fmt:setLocale value="${language}"/>
-<fmt:setBundle basename="resources"/>
+<%@ page language="java" contentType="text/html;charset=UTF-8" %>
+
+<%@ include file="myAccount/directive/taglib.jspf" %>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -39,6 +38,7 @@
                     <h1><fmt:message key="sign_in.login"/></h1>
                     <c:if test="${wrongLoginOrPassword == true}">
                         <div class="alert alert-danger" role="alert">
+                            <strong><fmt:message key="sign_in.oh_snap"/></strong>
                             <strong><fmt:message key="sign_in.oh_snap"/></strong>
                             <fmt:message key="sign_in.incorrect_login_or_email"/>
                         </div>

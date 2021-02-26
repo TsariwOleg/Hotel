@@ -2,9 +2,11 @@ package hotel.entity;
 
 
 import java.time.LocalDate;
+import java.time.Period;
 
 public class Order {
     private int id;
+    private LocalDate dateOfCreating;
     private LocalDate startDate;
     private LocalDate endDate;
     private String note;
@@ -13,7 +15,24 @@ public class Order {
     private String status;
     private Room room;
     private User user;
+    private int totalPrice;
 
+    public LocalDate getDateOfCreating() {
+        return dateOfCreating;
+    }
+
+    public void setDateOfCreating(LocalDate dateOfCreating) {
+        this.dateOfCreating = dateOfCreating;
+    }
+
+    public int getTotalPrice() {
+        totalPrice=Period.between(startDate,endDate).getDays()*room.getPrice();
+        return totalPrice;
+    }
+
+    public void setTotalPrice(int price) {
+        this.totalPrice = price;
+    }
 
     public User getUser() {
         return user;

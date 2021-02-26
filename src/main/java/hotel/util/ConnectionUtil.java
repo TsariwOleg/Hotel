@@ -1,5 +1,9 @@
 package hotel.util;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.sql.*;
 
 public class ConnectionUtil {
@@ -7,23 +11,43 @@ public class ConnectionUtil {
     }
 
 
-    public static Connection getConnection() {
-        String URL = "jdbc:h2:~/Hotels";
-        String Password = "";
-        String Driver = "org.h2.Driver";
-        String Login = "user";
-        Connection connection = null;
+//    public static Connection getConnection() {
+//        String URL = "jdbc:h2:~/Hotels";
+//        String Password = "";
+//        String Driver = "org.h2.Driver";
+//        String Login = "user";
+//        Connection connection = null;
+//
+//        try {
+//            Class.forName(Driver);
+//            connection = DriverManager.getConnection(URL, Login, Password);
+//
+//        } catch (SQLException | ClassNotFoundException e) {
+//            System.out.println("sdf" + e);
+//        }
+//
+//        return connection;
+//    }
 
+
+
+
+    public static Connection getConnection(){
+        Context ctx;
+        Connection con = null;
         try {
-            Class.forName(Driver);
-            connection = DriverManager.getConnection(URL, Login, Password);
+            ctx = new InitialContext();
+            DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/h2PoolCon");
+            con = ds.getConnection();
+        } catch (NamingException e) {
+            System.out.println(e);
+        } catch (SQLException e) {
+            System.out.println(e);
 
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println("sdf" + e);
         }
-
-        return connection;
+        return con;
     }
+
 
     public static void closeStatement(Statement statement){
         try {

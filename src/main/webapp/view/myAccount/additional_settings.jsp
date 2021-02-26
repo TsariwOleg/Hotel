@@ -1,11 +1,9 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" %>
-<% String strContextPath = request.getContextPath();%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<% String language = request.getSession().getAttribute("language").toString();%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="<%=language%>"/>
-<fmt:setBundle basename="resources"/>
+<%@ include file="directive/taglib.jspf" %>
+
+<% String strContextPath = request.getContextPath();%>
+
 <!DOCTYPE html>
 <html>
 
@@ -23,9 +21,9 @@
 </head>
 
 <body>
+
 <form action="<%=strContextPath%>/signIn" method="post">
     <jsp:include page="includedPage/navbar.jsp"/>
-
 </form>
 
 

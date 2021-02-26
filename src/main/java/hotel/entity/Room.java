@@ -2,6 +2,8 @@ package hotel.entity;
 
 import hotel.enums.ClassOfTheRoom;
 
+import javax.servlet.http.Part;
+import java.util.Collection;
 import java.util.List;
 
 public class Room {
@@ -15,9 +17,59 @@ public class Room {
     private List<String> amenitiesOfRoom;
     private List<FacilitiesEntity> facilitiesEntities;
     private ClassOfTheRoom classOfTheRoom;
-
-
     private Review.CategoryReviews totalPoint;
+    private double avgPoint;
+
+
+
+    private String strMainPhoto;
+    private List<String> strPhotos;
+    private Part mainPhoto;
+    private List<Part> photos;
+
+
+    public void setAvgPoint(double avgPoint) {
+        this.avgPoint = avgPoint;
+    }
+
+    public String getStrMainPhoto() {
+        return strMainPhoto;
+    }
+
+    public void setStrMainPhoto(String strMainPhoto) {
+        this.strMainPhoto = strMainPhoto;
+    }
+
+    public List<String> getStrPhotos() {
+        return strPhotos;
+    }
+
+    public void setStrPhotos(List<String> strPhotos) {
+        this.strPhotos = strPhotos;
+    }
+
+    public Part getMainPhoto() {
+        return mainPhoto;
+    }
+
+    public void setMainPhoto(Part mainPhoto) {
+        this.mainPhoto = mainPhoto;
+    }
+
+    public List<Part> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Part> photos) {
+        this.photos = photos;
+    }
+
+    public double getAvgPoint() {
+        this.avgPoint =
+                (double)(totalPoint.getComfortable()+totalPoint.getFortunes()+
+                        totalPoint.getService()+totalPoint.getSoundproof())/4;
+        return avgPoint;
+    }
 
     public ClassOfTheRoom getClassOfTheRoom() {
         return classOfTheRoom;

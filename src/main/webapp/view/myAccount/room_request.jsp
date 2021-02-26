@@ -1,15 +1,15 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%@ page language="java" contentType="text/html;charset=UTF-8" %>
+
+<%@ include file="directive/taglib.jspf" %>
+
 <% String strContextPath = request.getContextPath();%>
 <%@ page import="hotel.enums.RequestStatus" %>
 <%@ page import="hotel.enums.ClassOfTheRoom" %>
 <%@ page import="hotel.enums.Role" %>
 
 
-<% String language = request.getSession().getAttribute("language").toString();%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<fmt:setLocale value="<%=language%>"/>
-<fmt:setBundle basename="resources"/>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -63,7 +63,7 @@
                         <div class="col-3 mt-2">
 
                             <!-- Button to Open the Modal -->
-                            <c:if test="${role eq 'CLIENT'}">
+                            <c:if test="${sessionScope.role eq Role.CLIENT.name()}">
                                 <button type="button" class="btn btn-primary mt-2" data-toggle="modal"
                                         data-target="#create_request">
                                     <fmt:message key="room_request_jsp.create_request"/>
@@ -315,7 +315,7 @@
                                                                             <div class="col-8">
                                                                                 <textarea name="note"
                                                                                           class="form-control" rows="4"
-                                                                                          style=" resize: none;"></textarea>
+                                                                                          style=" resize: none;" maxlength="300"></textarea>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -385,8 +385,8 @@
                                                                 </c:choose>
                                                             </strong><br>
 
-                                                            <c:if test="${request.requestStatus.name() eq RequestStatus.IN_PROCESS.name() && role
-                                                            eq  'CLIENT'}">
+                                                            <c:if test="${request.requestStatus.name() eq RequestStatus.IN_PROCESS.name() && sessionScope.role
+                                                            eq  Role.CLIENT.name()}">
                                                                 <form onsubmit='redirect();return false;' method="post">
                                                                     <div class="collapse "
                                                                          id="collapseClass_${request.id}">
@@ -450,7 +450,7 @@
                                                                 </c:choose>
                                                             </strong><br>
 
-                                                            <c:if test="${request.requestStatus.name() eq RequestStatus.IN_PROCESS.name() && role eq 'CLIENT'}">
+                                                            <c:if test="${request.requestStatus.name() eq RequestStatus.IN_PROCESS.name() && sessionScope.role eq Role.CLIENT.name()}">
                                                                 <form onsubmit='redirect();return false;' method="post">
                                                                     <div class="collapse "
                                                                          id="collapsePrice_${request.id}">
@@ -465,7 +465,7 @@
                                                                                                            class="form-control"
                                                                                                            id="priceRangeNumberEdit"
                                                                                                            placeholder="Example input"
-                                                                                                           name="price">
+                                                                                                           name="price" min="0" max="1000">
                                                                                                 </div>
                                                                                             </label>
                                                                                             <br>
@@ -518,7 +518,7 @@
                                                                 </c:choose>
                                                             </strong><br>
 
-                                                            <c:if test="${request.requestStatus.name() eq RequestStatus.IN_PROCESS.name()  && role eq 'CLIENT'}">
+                                                            <c:if test="${request.requestStatus.name() eq RequestStatus.IN_PROCESS.name()  && sessionScope.role eq Role.CLIENT.name()}">
                                                                 <form onsubmit='redirect();return false;' method="post">
                                                                     <div class="collapse "
                                                                          id="collapseCountOfClient_${request.id}">
@@ -610,7 +610,7 @@
                                                             </c:choose>
 
 
-                                                            <c:if test="${request.requestStatus.name() eq RequestStatus.IN_PROCESS.name()  && role eq 'CLIENT'}">
+                                                            <c:if test="${request.requestStatus.name() eq RequestStatus.IN_PROCESS.name()  && sessionScope.role eq Role.CLIENT.name()}">
                                                                 <div class="collapse "
                                                                      id="collapseDateEdit_${request.id}">
                                                                     <div class="card card-body border-0">
@@ -627,7 +627,9 @@
                                                                                                    autocomplete="off"
                                                                                                    id="start"
                                                                                                    class="form-control text-left"
-                                                                                                   name="start_edited_date">
+                                                                                                   name="start_edited_date"
+                                                                                                   pattern="\d{2}-\d{2}-\d{4}"
+                                                                                                   title="Wrong input pattern">
                                                                                             <span class="fa fa-calendar"
                                                                                                   id="fa-1"></span>
 
@@ -644,7 +646,9 @@
                                                                                                    id="end"
                                                                                                    class="form-control text-left "
                                                                                                    name="end_edited_date"
-                                                                                                   placeholder="Another input">
+                                                                                                   placeholder="Another input"
+                                                                                            pattern="\d{2}-\d{2}-\d{4}"
+                                                                                            title="Wrong input pattern">
                                                                                             <span class="fa fa-calendar"
                                                                                                   id="fa-2"></span>
                                                                                         </div>
@@ -674,7 +678,7 @@
                                                                 </div>
                                                             </c:if>
 
-                                                            <c:if test="${role eq 'MANAGER'}">
+                                                            <c:if test="${sessionScope.role eq Role.MANAGER.name()}">
                                                                 <strong>
                                                                     <a class="btn btn-link">
                                                                         <fmt:message key="room_request_jsp.full_name"/>
@@ -716,7 +720,7 @@
 
 
                                                             <c:choose>
-                                                                <c:when test="${role eq 'MANAGER' && request.requestStatus.name() eq RequestStatus.IN_PROCESS.name()}">
+                                                                <c:when test="${sessionScope.role eq Role.MANAGER.name() && request.requestStatus.name() eq RequestStatus.IN_PROCESS.name()}">
                                                                     <div class="col-3">
                                                                         <a href="<%=strContextPath%>/rooms?page=0&selectRoomFor=${request.id}"
                                                                            class="btn btn-secondary ml-1">
@@ -755,7 +759,7 @@
                                                                 </c:when>
                                                                 <c:otherwise>
 
-                                                                    <c:if test="${role eq 'CLIENT'}">
+                                                                    <c:if test="${sessionScope.role eq Role.CLIENT.name()}">
                                                                         <div class="col-3">
                                                                             <button type="submit" name="delete_request"
                                                                                     class="btn btn-secondary ml-1"
@@ -801,7 +805,8 @@
                                                             </c:choose>
                                                         </div>
 
-                                                        <c:if test="${request.requestStatus.name() eq RequestStatus.IN_PROCESS.name()  && role eq 'CLIENT'}">
+                                                        <c:if test="${request.requestStatus.name() eq RequestStatus.IN_PROCESS.name()
+                                                         && sessionScope.role eq Role.CLIENT.name()}">
                                                             <form onsubmit='redirect();return false;' method="post">
                                                                 <div class="collapse " id="collapseNote_${request.id}">
                                                                     <div class="card card-body border-0">
@@ -810,6 +815,7 @@
                                                                             <div class="col-10">
                                                                             <textarea name="note" class="form-control"
                                                                                       rows="4"
+                                                                                      maxlength="300"
                                                                                       style=" resize: none;"></textarea>
                                                                             </div>
                                                                         </div>
@@ -834,7 +840,7 @@
                                                         </c:if>
 
 
-                                                        <c:if test="${role eq 'CLIENT'}">
+                                                        <c:if test="${sessionScope.role eq Role.CLIENT.name()}">
                                                         <div class="row">
                                                             <div class="col-8"></div>
                                                             <div class="col-4">

@@ -1,12 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <% String strContextPath = request.getContextPath();%>
 
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ include file="myAccount/directive/taglib.jspf" %>
 
-<fmt:setLocale value="${language}"/>
-<fmt:setBundle basename="resources"/>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,21 +49,27 @@
         <hr>
         <div class="form-group">
             <div class="row">
-                <div class="col-6"><input type="text" class="form-control" name="first_name" placeholder="First Name"
-                                          required="required"></div>
+                <div class="col-6">
+                    <input type="text" class="form-control" name="first_name" placeholder="First Name"
+                                          required="required" pattern="[A-ZА-ЯІЄЇ][a-zа-яіїє]+" minlength="3" maxlength="20"
+                           title="Name must start with a capital letter and next contain only lowercase letters. e.g. John">
+                </div>
                 <div class="col-6"><input type="text" class="form-control" name="last_name" placeholder="Last Name"
-                                          required="required"></div>
+                                          required="required" pattern="[A-ZА-ЯІЄЇ][a-zа-яіїє]+" minlength="2" maxlength="20"
+                                          title="Surname must start with a capital letter and next contain only lowercase letters. e.g. Smith"></div>
             </div>
         </div>
         <div class="form-group">
             <input type="email" class="form-control" name="email" placeholder="email" required="required">
         </div>
         <div class="form-group">
-            <input type="password" class="form-control" name="password" placeholder="password" required="required">
+            <input type="password" class="form-control" name="password" placeholder="password" required="required"
+           title="Password must containe at leaste 4 cymbol" minlength="4" maxlength="30">
         </div>
         <div class="form-group">
             <input type="password" class="form-control" name="confirm_password" placeholder="confirm_password"
-                   required="required">
+                   required="required"  title="Password must containe at leaste 4 cymbol"
+            minlength="4" maxlength="30">
         </div>
 
 

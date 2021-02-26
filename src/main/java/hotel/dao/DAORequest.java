@@ -102,11 +102,16 @@ public class DAORequest {
             request.setId(resultSet.getInt(1));
             request.setIdUser(resultSet.getInt("id_client"));
             request.setPrice(resultSet.getInt("price"));
-            request.setClassOfTheRoom(ClassOfTheRoom.valueOf(resultSet.getString("class_of_room")));
+
+            ClassOfTheRoom classOfTheRoom = resultSet.getString("class_of_room")!=null?
+                    ClassOfTheRoom.valueOf(resultSet.getString("class_of_room")):null;
+            request.setClassOfTheRoom(classOfTheRoom);
+
             request.setCountOfClient(resultSet.getInt("count_of_client"));
             request.setName(resultSet.getString("name"));
             request.setSurname(resultSet.getString("surname"));
             request.setRequestStatus(RequestStatus.valueOf(resultSet.getString("status")));
+
             if (resultSet.getDate("DateOccupied") == null &&
                     resultSet.getDate("DateВeparture") == null) {
                 request.setStartDate(null);
@@ -116,6 +121,7 @@ public class DAORequest {
                 //todo rename DateВeparture
                 request.setEndDate(resultSet.getDate("DateВeparture").toLocalDate());
             }
+
             request.setRoomList(new DAORoom().getRoomsRequest(request.getId()));
             request.setNote(resultSet.getString("Notes"));
             list.add(request);
