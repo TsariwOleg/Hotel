@@ -1,6 +1,7 @@
 package hotel.dao;
 
 import hotel.entity.User;
+import hotel.enums.Language;
 import hotel.enums.Role;
 import hotel.util.ConnectionUtil;
 
@@ -60,7 +61,7 @@ public class DAOUser {
         int idSettings=0;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_SELECT_LANGUAGE_BY_NAME);
-            preparedStatement.setString(1, user.getLanguage());
+            preparedStatement.setString(1, user.getLanguage().name());
             resultSet = preparedStatement.executeQuery();
 
             int idLanguage = 0;
@@ -90,7 +91,7 @@ public class DAOUser {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_LANGUAGE_OF_USER);
-            preparedStatement.setString(1,user.getLanguage());
+            preparedStatement.setString(1,user.getLanguage().name());
             preparedStatement.setInt(2,user.getId());
             preparedStatement.execute();
         }catch (SQLException e){
@@ -114,7 +115,7 @@ public class DAOUser {
                 user.setSurname(resultSet.getString("surname"));
                 user.setRole(resultSet.getBoolean("ismanager") ? Role.MANAGER : Role.CLIENT);
                 user.setEmail(resultSet.getString("email"));
-                user.setLanguage(resultSet.getString("language"));
+                user.setLanguage(Language.valueOf(resultSet.getString("language")));
             }
         } catch (SQLException e) {
             System.err.println(e);

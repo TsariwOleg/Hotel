@@ -1,6 +1,6 @@
 package hotel.util;
 
-import hotel.entity.FacilitiesEntity;
+import hotel.entity.AmenitiesEntity;
 import hotel.entity.Room;
 import hotel.enums.AmenitiesOfRoom;
 
@@ -15,24 +15,24 @@ public class PopularFacilitiesToEntity {
         AmenitiesOfRoom[] popularFacilities = AmenitiesOfRoom.values();
         List<RowOfPopularFacilitiesToEntity> list = new ArrayList<>();
         for (int i = 0; i < popularFacilities.length; i += 3) {
-            FacilitiesEntity firstCol;
-            FacilitiesEntity secondCol = null;
-            FacilitiesEntity thirdCol = null;
+            AmenitiesEntity firstCol;
+            AmenitiesEntity secondCol = null;
+            AmenitiesEntity thirdCol = null;
 
-            firstCol = new FacilitiesEntity(
+            firstCol = new AmenitiesEntity(
                     popularFacilities[i].getPathToIMG(),
                     popularFacilities[i].name(),
                     popularFacilities[i].getResourceName()
             );
 
             if ((i + 1) < popularFacilities.length) {
-                secondCol = new FacilitiesEntity( popularFacilities[i + 1].getPathToIMG(),
+                secondCol = new AmenitiesEntity( popularFacilities[i + 1].getPathToIMG(),
                         popularFacilities[i + 1].name(),
                         popularFacilities[i+1].getResourceName());
             }
 
             if ((i + 2) < popularFacilities.length) {
-                thirdCol = new FacilitiesEntity( popularFacilities[i + 2].getPathToIMG(),
+                thirdCol = new AmenitiesEntity( popularFacilities[i + 2].getPathToIMG(),
                         popularFacilities[i + 2].name(),
                         popularFacilities[i+2].getResourceName());
             }
@@ -42,11 +42,11 @@ public class PopularFacilitiesToEntity {
     }
 
 
-    public static List<FacilitiesEntity> getListOfAmenitiesOfRoom(List<String> popularFacilities) {
-        List<FacilitiesEntity> list = new ArrayList<>();
+    public static List<AmenitiesEntity> getListOfAmenitiesOfRoom(List<String> popularFacilities) {
+        List<AmenitiesEntity> list = new ArrayList<>();
         for (String popularFacility : popularFacilities) {
             AmenitiesOfRoom amenitiesOfRoom = AmenitiesOfRoom.valueOf(popularFacility);
-            list.add(new FacilitiesEntity(amenitiesOfRoom.getPathToIMG(),
+            list.add(new AmenitiesEntity(amenitiesOfRoom.getPathToIMG(),
                     amenitiesOfRoom.getResourceName() ));
         }
         return list;
@@ -54,38 +54,38 @@ public class PopularFacilitiesToEntity {
 
 
     public static class RowOfPopularFacilitiesToEntity {
-        private FacilitiesEntity firstCol;
-        private FacilitiesEntity secondCol;
-        private FacilitiesEntity thirdCol;
+        private AmenitiesEntity firstCol;
+        private AmenitiesEntity secondCol;
+        private AmenitiesEntity thirdCol;
 
-        public RowOfPopularFacilitiesToEntity(FacilitiesEntity firstCol, FacilitiesEntity secondCol,
-                                              FacilitiesEntity thirdCol) {
+        public RowOfPopularFacilitiesToEntity(AmenitiesEntity firstCol, AmenitiesEntity secondCol,
+                                              AmenitiesEntity thirdCol) {
             this.firstCol = firstCol;
             this.secondCol = secondCol;
             this.thirdCol = thirdCol;
         }
 
-        public FacilitiesEntity getFirstCol() {
+        public AmenitiesEntity getFirstCol() {
             return firstCol;
         }
 
-        public void setFirstCol(FacilitiesEntity firstCol) {
+        public void setFirstCol(AmenitiesEntity firstCol) {
             this.firstCol = firstCol;
         }
 
-        public FacilitiesEntity getSecondCol() {
+        public AmenitiesEntity getSecondCol() {
             return secondCol;
         }
 
-        public void setSecondCol(FacilitiesEntity secondCol) {
+        public void setSecondCol(AmenitiesEntity secondCol) {
             this.secondCol = secondCol;
         }
 
-        public FacilitiesEntity getThirdCol() {
+        public AmenitiesEntity getThirdCol() {
             return thirdCol;
         }
 
-        public void setThirdCol(FacilitiesEntity thirdCol) {
+        public void setThirdCol(AmenitiesEntity thirdCol) {
             this.thirdCol = thirdCol;
         }
 

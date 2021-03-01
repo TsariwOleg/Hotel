@@ -1,5 +1,6 @@
 package hotel.entity;
 
+import hotel.enums.Language;
 import hotel.enums.Role;
 
 public class User {
@@ -11,13 +12,14 @@ public class User {
     private int accessId;
     private int settingsId;
     private Role role;
-    private String language;
+    private Language language;
 
-    public String getLanguage() {
+
+    public Language getLanguage() {
         return language;
     }
 
-    public void setLanguage(String language) {
+    public void setLanguage(Language language) {
         this.language = language;
     }
 

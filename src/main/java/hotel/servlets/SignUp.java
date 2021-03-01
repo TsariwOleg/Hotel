@@ -2,6 +2,7 @@ package hotel.servlets;
 
 import hotel.dao.DAOUser;
 import hotel.entity.User;
+import hotel.enums.Language;
 import hotel.enums.Role;
 
 import javax.servlet.ServletException;
@@ -50,7 +51,7 @@ public class SignUp extends HttpServlet {
             user.setRole(Role.CLIENT);
         }
 
-        user.setLanguage(req.getSession().getAttribute("language").toString());
+        user.setLanguage(Language.valueOf(req.getSession().getAttribute("language").toString()));
         daoUser.add(user);
         resp.sendRedirect(req.getContextPath()+"/rooms");
     }

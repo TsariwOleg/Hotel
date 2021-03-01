@@ -1,18 +1,18 @@
 package hotel.entity;
 
-public class FacilitiesEntity {
+public class AmenitiesEntity {
     private String id;
     private String path;
     private String enumName;
     private String resourceName;
 
-    public FacilitiesEntity(String path , String enumName, String resourceName) {
+    public AmenitiesEntity(String path , String enumName, String resourceName) {
         this(path,resourceName);
         this.enumName=enumName;
     }
 
 
-    public FacilitiesEntity(String path , String resourceName) {
+    public AmenitiesEntity(String path , String resourceName) {
         this.id=resourceName;
         this.path = path;
         this.resourceName=resourceName;

@@ -3,7 +3,6 @@ package hotel.entity;
 import hotel.enums.ClassOfTheRoom;
 
 import javax.servlet.http.Part;
-import java.util.Collection;
 import java.util.List;
 
 public class Room {
@@ -15,7 +14,7 @@ public class Room {
     private String description;
     private String additionalServices;
     private List<String> amenitiesOfRoom;
-    private List<FacilitiesEntity> facilitiesEntities;
+    private List<AmenitiesEntity> facilitiesEntities;
     private ClassOfTheRoom classOfTheRoom;
     private Review.CategoryReviews totalPoint;
     private double avgPoint;
@@ -153,11 +152,12 @@ public class Room {
         this.amenitiesOfRoom = amenitiesOfRoom;
     }
 
-    public List<FacilitiesEntity> getFacilitiesEntities() {
+
+    public List<AmenitiesEntity> getFacilitiesEntities() {
         return facilitiesEntities;
     }
 
-    public void setFacilitiesEntities(List<FacilitiesEntity> facilitiesEntities) {
+    public void setFacilitiesEntities(List<AmenitiesEntity> facilitiesEntities) {
         this.facilitiesEntities = facilitiesEntities;
     }
 
