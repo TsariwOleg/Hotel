@@ -26,19 +26,11 @@ public class Rooms extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
        req.setAttribute("language",req.getSession().getAttribute("language"));
 
+        List<Room> roomList = DAORoom.getAllRooms();
 
-        DAORoom daoRoom = new DAORoom();
-        List<Room> roomList = daoRoom.getAllRooms();
-
-
-        //todo delete this construction
-        if (req.getSession().getAttribute("id")!=null &&
-                "CLIENT".equals(req.getSession().getAttribute("role"))){
-            req.setAttribute("client",true);
-        }
 
         if (req.getParameter("filtering") != null) {
-            roomList = daoRoom.getFilteredRooms(req.getParameterMap());
+            roomList = DAORoom.getFilteredRooms(req.getParameterMap());
         }
 
         req.setAttribute("role",req.getSession().getAttribute("role"));

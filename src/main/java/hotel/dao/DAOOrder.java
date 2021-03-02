@@ -13,7 +13,6 @@ import java.util.List;
 
 public class DAOOrder {
     private static String SQL_INSERT_INTO_ORDERS = "insert into Orders(id_client,id_room,date_Of_Creating,DateOccupied,DateВeparture,Notes) values(?,?,?,?,?,?)";
-    private static String SQL_INSERT_INTO_ROOMS_ORDERS = "insert into ROOMS_orders values(?,?)";
 
     private static String SQL_SELECT_ORDERS_BY_CLIENT_ID =
             "SELECT * FROM ORDERS o INNER JOIN ROOMS r ON o.ID_ROOM =r.ID WHERE o.ID_CLIENT =?";
@@ -32,8 +31,9 @@ public class DAOOrder {
 
     private static String SQL_DELETE_OLD_ORDER = "DELETE FROM ORDERS WHERE date_Of_Creating<?";
 
+    private DAOOrder(){}
 
-    public void add(Order order) {
+    public static void add(Order order) {
         PreparedStatement preparedStatement = null;
 
         try {
@@ -54,7 +54,7 @@ public class DAOOrder {
     }
 
 
-    public void deleteOrder(int id) {
+    public static void deleteOrder(int id) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_DELETE_ORDER_BY_ID);
@@ -67,7 +67,7 @@ public class DAOOrder {
         }
     }
 
-    public void payForTheOrder(int id) {
+    public static void payForTheOrder(int id) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_ORDER_BY_ID);
@@ -80,23 +80,10 @@ public class DAOOrder {
         }
     }
 
-    public void addRoomOrder(int idRoom, int idOrder) {
-        PreparedStatement preparedStatement = null;
-        try {
-            preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_INSERT_INTO_ROOMS_ORDERS);
-            preparedStatement.setInt(1, idRoom);
-            preparedStatement.setInt(2, idOrder);
-            preparedStatement.execute();
-
-        } catch (SQLException e) {
-            System.err.println(e);
-        } finally {
-            ConnectionUtil.closePreparedStatement(preparedStatement);
-        }
-    }
 
 
-    public List<Order> getOrderById(int idClient) {
+
+    public static List<Order> getOrderById(int idClient) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         List<Order> orderList = new ArrayList<>();
@@ -130,7 +117,7 @@ public class DAOOrder {
     }
 
 
-    public boolean checkDate(Order order) {
+    public static boolean checkDate(Order order) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
@@ -152,7 +139,7 @@ public class DAOOrder {
     }
 
 
-    public List<Order> getOrders() {
+    public static List<Order> getOrders() {
         Statement statement = null;
         ResultSet resultSet = null;
         List<Order> orderList = new ArrayList<>();
@@ -193,7 +180,7 @@ public class DAOOrder {
     }
 
 
-    public void deleteOldOrders(LocalDate localDate) {
+    public static void deleteOldOrders(LocalDate localDate) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_DELETE_OLD_ORDER);

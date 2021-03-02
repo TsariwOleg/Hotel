@@ -27,7 +27,6 @@ public class SignUp extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        DAOUser daoUser = new DAOUser();
         User user = new User();
 
         if (!req.getParameter("password").equals(req.getParameter("confirm_password"))){
@@ -52,7 +51,7 @@ public class SignUp extends HttpServlet {
         }
 
         user.setLanguage(Language.valueOf(req.getSession().getAttribute("language").toString()));
-        daoUser.add(user);
+        DAOUser.add(user);
         resp.sendRedirect(req.getContextPath()+"/rooms");
     }
 }

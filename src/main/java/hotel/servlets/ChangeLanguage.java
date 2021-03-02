@@ -19,18 +19,23 @@ public class ChangeLanguage extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getParameter("lang") != null) {
             switch (req.getParameter("lang")) {
-               case  "ua":req.getSession().setAttribute("language", Language.UA.name()); break;
-               case  "en":req.getSession().setAttribute("language",  Language.EN.name()); break;
-                default:req.getSession().setAttribute("language",  Language.UA.name());
+                case "ua":
+                    req.getSession().setAttribute("language", Language.UA.name());
+                    break;
+                case "en":
+                    req.getSession().setAttribute("language", Language.EN.name());
+                    break;
+                default:
+                    req.getSession().setAttribute("language", Language.UA.name());
             }
         }
 
-        if (req.getSession().getAttribute("id")!=null){
+        if (req.getSession().getAttribute("id") != null) {
             User user = new User();
             user.setId(Integer.parseInt(req.getSession().getAttribute("id").toString()));
             user.setLanguage(Language.valueOf(req.getSession().getAttribute("language").toString()));
-           new DAOUser().changeLanguageOfUser(user);
+            DAOUser.changeLanguageOfUser(user);
         }
-        resp.sendRedirect(req.getContextPath()+"/rooms");
+        resp.sendRedirect(req.getContextPath() + "/rooms");
     }
 }

@@ -22,15 +22,11 @@ public class Room extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setCharacterEncoding("UTF-8");
-        hotel.entity.Room room = new DAORoom().get(Integer.parseInt(req.getParameter("id")));
-        List<Review> reviews = new DAOReview().getReviewsByRoomId(room.getId());
+        hotel.entity.Room room =  DAORoom.get(Integer.parseInt(req.getParameter("id")));
+        List<Review> reviews =  DAOReview.getReviewsByRoomId(room.getId());
         req.setAttribute("is_registered_user", req.getSession().getAttribute("id") == null);
 
-        //todo delete this construction
-        if (req.getSession().getAttribute("id") != null &&
-                "CLIENT".equals(req.getSession().getAttribute("role"))) {
-            req.setAttribute("client", true);
-        }
+
 
         req.setAttribute("best_facilities",
                 PopularFacilitiesToEntity.getListOfAmenitiesOfRoom(room.getAmenitiesOfRoom()));
@@ -45,7 +41,6 @@ public class Room extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getSession().getAttribute("role") != null && req.getParameter("create_review") != null) {
-            DAOReview daoReview = new DAOReview();
 
 
             Review review = new Review();
@@ -63,50 +58,48 @@ public class Room extends HttpServlet {
 
             review.setCategoryReviews(comfortable, fortunes, soundproof, service);
 
-            daoReview.addReview(review);
-        } else {
-            System.out.println("no");
+            DAOReview.addReview(review);
         }
 
         if (req.getParameter("edit") != null) {
-            DAORoom daoRoom = new DAORoom();
+
             hotel.entity.Room room = new hotel.entity.Room();
             room.setId(Integer.parseInt(req.getParameter("id")));
 
             if (req.getParameter("edit_class_of_room") != null) {
                 room.setClassOfTheRoom(ClassOfTheRoom.valueOf(req.getParameter("edit_class_of_room")));
-                daoRoom.updateClassOfTheRoom(room);
+                DAORoom.updateClassOfTheRoom(room);
             }
 
             if (req.getParameter("price") != null && !req.getParameter("price").isEmpty()) {
                 room.setRoomNumber(Integer.parseInt(req.getParameter("room_number")));
-                daoRoom.updatePrice(room);
+                DAORoom.updatePrice(room);
             }
 
             if (req.getParameter("room_number") != null && !req.getParameter("room_number").isEmpty()) {
                 room.setRoomNumber(Integer.parseInt(req.getParameter("room_number")));
-                daoRoom.updateRoomNumber(room);
+                DAORoom.updateRoomNumber(room);
             }
 
             if (req.getParameter("count_of_client") != null ) {
                 room.setCountOfClient(Integer.parseInt(req.getParameter("count_of_client")));
-                daoRoom.updateCountOfClient(room);
+                DAORoom.updateCountOfClient(room);
             }
 
             if (req.getParameter("description") != null && !req.getParameter("description").isEmpty()) {
                 room.setDescription(req.getParameter("description"));
-                daoRoom.updateDescription(room);
+                DAORoom.updateDescription(room);
             }
 
 
             if (req.getParameter("additional_services") != null && !req.getParameter("additional_services").isEmpty()) {
                 room.setDescription(req.getParameter("additional_services"));
-                daoRoom.updateAdditionalService(room);
+                DAORoom.updateAdditionalService(room);
             }
 
             if (req.getParameterValues("case")!=null){
                 room.setAmenitiesOfRoom(Arrays.asList(req.getParameterValues("case")));
-                daoRoom.updateAmenitiesOfRoom(room);
+                DAORoom.updateAmenitiesOfRoom(room);
             }
 
 

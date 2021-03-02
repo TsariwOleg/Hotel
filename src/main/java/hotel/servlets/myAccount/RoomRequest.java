@@ -24,13 +24,12 @@ public class RoomRequest extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        DAORequest daoRequest = new DAORequest();
         List<Request> requests;
 
         if (Role.MANAGER.toString().equals(req.getSession().getAttribute("role").toString())) {
-            requests = daoRequest.getRequests();
+            requests = DAORequest.getRequests();
         } else {
-            requests = daoRequest.getRequestsByClientId(Integer.parseInt(req.getSession().getAttribute("id").toString()));
+            requests = DAORequest.getRequestsByClientId(Integer.parseInt(req.getSession().getAttribute("id").toString()));
         }
 
         req.setAttribute("requests", requests);
@@ -40,17 +39,16 @@ public class RoomRequest extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Request request = new Request();
-        DAORequest daoRequest = new DAORequest();
 
 
         if (req.getParameter("refuse_request")!=null){
-            daoRequest.changeStatus(Integer.parseInt(req.getParameter("refuse_request")),RequestStatus.REFUSE.name());
+            DAORequest.changeStatus(Integer.parseInt(req.getParameter("refuse_request")),RequestStatus.REFUSE.name());
             resp.sendRedirect(req.getContextPath() + "/roomRequest");
             return;
         }
 
         if (req.getParameter("ready_request")!=null){
-            daoRequest.changeStatus(Integer.parseInt(req.getParameter("ready_request")),RequestStatus.READY.name());
+            DAORequest.changeStatus(Integer.parseInt(req.getParameter("ready_request")),RequestStatus.READY.name());
             resp.sendRedirect(req.getContextPath() + "/roomRequest");
             return;
         }
@@ -58,13 +56,13 @@ public class RoomRequest extends HttpServlet {
         if (req.getParameter("select") != null) {
             int idRoom = Integer.parseInt(req.getParameter("select"));
             int idRequest = Integer.parseInt(req.getParameter("selectRoomFor"));
-            daoRequest.addRoomToRequest(idRequest,idRoom);
+            DAORequest.addRoomToRequest(idRequest,idRoom);
             resp.sendRedirect(req.getContextPath()+"/roomRequest");
             return;
         }
 
         if (req.getParameter("delete_request") != null) {
-            daoRequest.deleteRequestById(Integer.parseInt(req.getParameter("delete_request")));
+            DAORequest.deleteRequestById(Integer.parseInt(req.getParameter("delete_request")));
         }
 
 
@@ -122,7 +120,7 @@ public class RoomRequest extends HttpServlet {
         request.setIdUser(Integer.parseInt(req.getSession().getAttribute("id").toString()));
 
         if (req.getParameter("create_request") != null) {
-            daoRequest.add(request);
+            DAORequest.add(request);
             resp.sendRedirect(req.getContextPath() + "/roomRequest");
             return;
         }
@@ -133,14 +131,14 @@ public class RoomRequest extends HttpServlet {
 
         if (req.getParameter("edit_class") != null) {
             request.setId(Integer.parseInt(req.getParameter("edit_class")));
-            daoRequest.updateClassOfTheRoom(request);
+            DAORequest.updateClassOfTheRoom(request);
             resp.sendRedirect(req.getContextPath() + "/roomRequest");
             return;
         }
 
         if (req.getParameter("edit_price") != null) {
             request.setId(Integer.parseInt(req.getParameter("edit_price")));
-            daoRequest.updatePrice(request);
+            DAORequest.updatePrice(request);
             resp.sendRedirect(req.getContextPath() + "/roomRequest");
             return;
         }
@@ -149,21 +147,21 @@ public class RoomRequest extends HttpServlet {
 
         if (req.getParameter("edit_date") != null) {
             request.setId(Integer.parseInt(req.getParameter("edit_date")));
-            daoRequest.updateDate(request);
+            DAORequest.updateDate(request);
             resp.sendRedirect(req.getContextPath() + "/roomRequest");
             return;
         }
 
         if (req.getParameter("edit_count_of_clients") != null) {
             request.setId(Integer.parseInt(req.getParameter("edit_count_of_clients")));
-            daoRequest.updateCountOfClients(request);
+            DAORequest.updateCountOfClients(request);
             resp.sendRedirect(req.getContextPath() + "/roomRequest");
             return;
         }
 
         if (req.getParameter("edit_note") != null) {
             request.setId(Integer.parseInt(req.getParameter("edit_note")));
-            daoRequest.updateNote(request);
+            DAORequest.updateNote(request);
             resp.sendRedirect(req.getContextPath() + "/roomRequest");
             return;
         }

@@ -26,9 +26,8 @@ public class SignIn extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        DAOUser daoUser = new DAOUser();
 
-        User user = daoUser.checkAccess(req.getParameter("email"), req.getParameter("password"));
+        User user = DAOUser.checkAccess(req.getParameter("email"), req.getParameter("password"));
 
         if (user != null) {
             req.getSession().setAttribute("id", user.getId());

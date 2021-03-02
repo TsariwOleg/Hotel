@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DAOReview {
-    String SQL_INSERT_INTO_REVIEWS = "INSERT INTO reviews(review,datee,id_client,id_room,id_ratting) values(?,?,?,?,?)";
-    String SQL_INSERT_INTO_CATEGORY_REVIEWS = "INSERT INTO category_reviews(COMFORTABLE,FORTUNES,SOUNDPROOF,SERVICE) values(?,?,?,?)";
+    private static String SQL_INSERT_INTO_REVIEWS = "INSERT INTO reviews(review,datee,id_client,id_room,id_ratting) values(?,?,?,?,?)";
+    private static String SQL_INSERT_INTO_CATEGORY_REVIEWS = "INSERT INTO category_reviews(COMFORTABLE,FORTUNES,SOUNDPROOF,SERVICE) values(?,?,?,?)";
 
     private static String SQL_SELECT_REVIEWS_BY_ROOM_ID = "SELECT * FROM REVIEWS r INNER JOIN " +
             "CATEGORY_REVIEWS cr ON R.ID_RATTING =CR.ID inner JOIN CLIENTS c2 ON c2.ID = r.ID_CLIENT  WHERE ID_ROOM=?";
@@ -21,8 +21,9 @@ public class DAOReview {
     private static String SQL_SELECT_AVG_GRATE_BY_ROOM_ID = "SELECT avg(comfortable) , avg(fortunes) , avg(soundproof), avg(service) FROM REVIEWS r INNER JOIN\n" +
             "CATEGORY_REVIEWS cr ON R.ID_RATTING =CR.ID WHERE r.ID_ROOM =?";
 
+    private DAOReview(){}
 
-    public void addReview(Review review) {
+    public static void addReview(Review review) {
         PreparedStatement preparedStatement = null;
 //todo transaction
 
@@ -48,34 +49,34 @@ public class DAOReview {
 
     }
 
-    public int addCategoryReviews(Review.CategoryReviews categoryReviews) {
+    public static int addCategoryReviews(Review.CategoryReviews categoryReviews) {
         PreparedStatement preparedStatement = null;
         int last_inserted_id = 0;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_INSERT_INTO_CATEGORY_REVIEWS);
 
-            if (categoryReviews.getComfortable()==0){
-                preparedStatement.setNull(1,Types.INTEGER);
-            }else {
+            if (categoryReviews.getComfortable() == 0) {
+                preparedStatement.setNull(1, Types.INTEGER);
+            } else {
                 preparedStatement.setInt(1, categoryReviews.getComfortable());
             }
 
 
-            if (categoryReviews.getFortunes()==0){
-                preparedStatement.setNull(2,Types.INTEGER);
-            }else {
+            if (categoryReviews.getFortunes() == 0) {
+                preparedStatement.setNull(2, Types.INTEGER);
+            } else {
                 preparedStatement.setInt(2, categoryReviews.getFortunes());
             }
 
-            if (categoryReviews.getSoundproof()==0){
-                preparedStatement.setNull(3,Types.INTEGER);
-            }else {
+            if (categoryReviews.getSoundproof() == 0) {
+                preparedStatement.setNull(3, Types.INTEGER);
+            } else {
                 preparedStatement.setInt(3, categoryReviews.getSoundproof());
             }
 
-            if (categoryReviews.getService()==0){
-                preparedStatement.setNull(4,Types.INTEGER);
-            }else {
+            if (categoryReviews.getService() == 0) {
+                preparedStatement.setNull(4, Types.INTEGER);
+            } else {
                 preparedStatement.setInt(4, categoryReviews.getService());
             }
 
@@ -95,7 +96,7 @@ public class DAOReview {
     }
 
 
-    public List<Review> getReviewsByRoomId(int idRoom) {
+    public static List<Review> getReviewsByRoomId(int idRoom) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         List<Review> reviews = new ArrayList<>();
@@ -133,7 +134,7 @@ public class DAOReview {
         return reviews;
     }
 
-    public Review.CategoryReviews getTotalPoint(int idRoom) {
+    public static Review.CategoryReviews getTotalPoint(int idRoom) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Review.CategoryReviews totalPoint = null;
@@ -156,7 +157,6 @@ public class DAOReview {
         }
         return totalPoint;
     }
-
 
 
 }

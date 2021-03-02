@@ -15,47 +15,25 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class DAORoom implements DAOImpl<Room> {
-    private String SQL_ADD_NEW_ROOM = "INSERT INTO ROOMS(class_of_room ,No_of_room,price,count_of_client,area_of_room," +
-            "description,Additional_services ) VALUES (?,?,?,?,?,?,?)";
-
-    String SQL_SELECT_ROOM_BY_ID = "SELECT * FROM ROOMS WHERE ID=?";
-
-    private String SQL_SELECT_COUNT_OF_ROOMS = "SELECT COUNT(*) FROM ROOMS";
-
-    String SQL_UPDATE_HOTELS_AMENITIES = "UPDATE room_Amenities_In_Room SET id_room=? WHERE id_room IS NULL";
-    String addPopularFacilities = "INSERT INTO room_Amenities_In_Room(id_Amenities_In_Room) " +
+public class DAORoom{
+    private static  String addPopularFacilities = "INSERT INTO room_Amenities_In_Room(id_Amenities_In_Room) " +
             "SELECT ID FROM Amenities_In_Room WHERE Amenity IN (?);";
 
-    String SQL_GET_AMENITIES_OF_ROOM = "SELECT * FROM Amenities_In_Room  WHERE id IN (SELECT id_Amenities_In_Room FROM room_Amenities_In_Room  WHERE id_room =?)";
 
-
-    /*String SQL_SELECT_ALL_ROOMS = "SELECT " +
-            "  avg(COMFORTABLE) AS comfortable ," +
-            "  avg(FORTUNES) AS FORTUNES ," +
-            "  avg(SOUNDPROOF) AS SOUNDPROOF ," +
-            "    avg(SERVICE) AS SERVICE , "+
-            "rooms.id ,rooms.CLASS_OF_ROOM, rooms.price ,rooms.DESCRIPTION, rooms.AREA_OF_ROOM , rooms.COUNT_OF_CLIENT  , " +
-            "   FROM rooms left JOIN REVIEWS r ON rooms.ID = r.ID_ROOM " +
-            "      LEFT JOIN CATEGORY_REVIEWS cr ON r.ID_RATTING =cr.ID " +
-            "     GROUP BY ID ";*/
-
-    String SQL_SELECT_ALL_ROOMS = "SELECT * FROM ROOMS r left JOIN rooms_Photo_OF_ROOMS rp ON rp.ID_ROOMS = r.id " +
+    private static  String SQL_SELECT_ROOM_BY_ID = "SELECT * FROM ROOMS WHERE ID=?";
+    private static  String SQL_SELECT_COUNT_OF_ROOMS = "SELECT COUNT(*) FROM ROOMS";
+    private static  String SQL_SELECT_AMENITIES_OF_ROOM = "SELECT * FROM Amenities_In_Room  WHERE id IN (SELECT id_Amenities_In_Room FROM room_Amenities_In_Room  WHERE id_room =?)";
+    private static  String SQL_SELECT_ALL_ROOMS = "SELECT * FROM ROOMS r left JOIN rooms_Photo_OF_ROOMS rp ON rp.ID_ROOMS = r.id " +
             "left JOIN Photo_OF_ROOMS p ON rp.ID_PHOTO_OF_ROOMS = p.id WHERE ISMAINPHOTO = true";
-
-    String SQL_SELECT_FILTERED_ORDERS = "SELECT id FROM ROOMS WHERE ID NOT in(SELECT ID_ROOM FROM ORDERS WHERE  (DATEOCCUPIED<? AND ?<=DATEВEPARTURE ))";
-
-    String SQL_SELECT_ROOMS_REQUESTS = "SELECT * FROM rooms r left JOIN rooms_Photo_OF_ROOMS rp ON rp.ID_ROOMS = r.id " +
+    private static  String SQL_SELECT_FILTERED_ORDERS = "SELECT id FROM ROOMS WHERE ID NOT in(SELECT ID_ROOM FROM ORDERS WHERE  (DATEOCCUPIED<? AND ?<=DATEВEPARTURE ))";
+    private static   String SQL_SELECT_ROOMS_REQUESTS = "SELECT * FROM rooms r left JOIN rooms_Photo_OF_ROOMS rp ON rp.ID_ROOMS = r.id " +
             "left JOIN Photo_OF_ROOMS p ON rp.ID_PHOTO_OF_ROOMS = p.id " +
             "INNER JOIN REQUESTS_ROOMS rr ON r.ID = rr.ID_ROOM WHERE rr.ID_REQUEST =? AND ISMAINPHOTO = true";
-
-
     private static String SQL_SELECT_PHOTOS_BY_ROOM_ID = "SELECT * FROM  rooms_Photo_OF_ROOMS rp" +
             " left JOIN Photo_OF_ROOMS p ON rp.ID_PHOTO_OF_ROOMS = p.id  WHERE rp.ID_ROOMS =? AND isMainPhoto=false ";
-
-
     private static String SQL_SELECT_MAIN_PHOTO_BY_ROOM_ID = "SELECT * FROM  rooms_Photo_OF_ROOMS rp" +
             " left JOIN Photo_OF_ROOMS p ON rp.ID_PHOTO_OF_ROOMS = p.id  WHERE rp.ID_ROOMS =? AND isMainPhoto=true ";
+
 
     private static String SQL_DELETE_AMENITIES_OF_ROOM = "DELETE FROM room_Amenities_In_Room WHERE id_room=?";
 
@@ -65,18 +43,24 @@ public class DAORoom implements DAOImpl<Room> {
     private static String SQL_UPDATE_ROOM_COUNT_OF_CLIENTS = "UPDATE ROOMS SET count_of_client=? WHERE ID=?";
     private static String SQL_UPDATE_ROOM_DESCRIPTION = "UPDATE ROOMS SET description=? WHERE ID=?";
     private static String SQL_UPDATE_ROOM_ADDITIONAL_SERVICE = "UPDATE ROOMS SET Additional_services=? WHERE ID=?";
+    private static  String SQL_UPDATE_HOTELS_AMENITIES = "UPDATE room_Amenities_In_Room SET id_room=? WHERE id_room IS NULL";
 
 
+    private static String SQL_INSERT_NEW_ROOM = "INSERT INTO ROOMS(class_of_room ,No_of_room,price,count_of_client,area_of_room," +
+            "description,Additional_services ) VALUES (?,?,?,?,?,?,?)";
     private static String SQL_INSERT_PHOTO = "INSERT INTO Photo_OF_ROOMS(photo,isMainPhoto) VALUES (?,?)";
     private static String SQL_INSERT_ROOM_PHOTO = "INSERT INTO rooms_Photo_OF_ROOMS VALUES (?,?)";
 
-    public List<Room> getRoomsRequest(int id) {
+
+    private DAORoom(){}
+
+    public static List<Room> getRoomsRequest(int id) {
         List<Room> rooms = new ArrayList<>();
         setRoom(rooms, SQL_SELECT_ROOMS_REQUESTS.replaceAll("\\?", String.valueOf(id)));
         return rooms;
     }
 
-    public int getCountOfRooms() {
+    public static int getCountOfRooms() {
         int countOfRooms = 0;
         Connection connection = ConnectionUtil.getConnection();
         Statement statement = null;
@@ -96,11 +80,11 @@ public class DAORoom implements DAOImpl<Room> {
     }
 
 
-    public void add(Room room) {
+    public static void add(Room room) {
         Connection connection = ConnectionUtil.getConnection();
         PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = connection.prepareStatement(SQL_ADD_NEW_ROOM);
+            preparedStatement = connection.prepareStatement(SQL_INSERT_NEW_ROOM);
             preparedStatement.setString(1, room.getClassOfTheRoom().name());
             preparedStatement.setInt(2, room.getRoomNumber());
             preparedStatement.setInt(3, room.getPrice());
@@ -129,7 +113,7 @@ public class DAORoom implements DAOImpl<Room> {
     }
 
 
-    public void updateAmenitiesOfRoom(Room room) {
+    public static void updateAmenitiesOfRoom(Room room) {
         PreparedStatement preparedStatement = null;
         try {
             //todo transaction
@@ -147,7 +131,7 @@ public class DAORoom implements DAOImpl<Room> {
 
     }
 
-    public void addAmenitiesOfRoom(int id, List<String> amenitiesOfRoom) {
+    public static void addAmenitiesOfRoom(int id, List<String> amenitiesOfRoom) {
         StringBuilder stringBuilder = new StringBuilder();
         for (String pop : amenitiesOfRoom) {
             stringBuilder.append("'").append(pop).append("'").append(",");
@@ -179,8 +163,8 @@ public class DAORoom implements DAOImpl<Room> {
     }
 
 
-    @Override
-    public Room get(int id) {
+
+    public static Room get(int id) {
         Room room = new Room();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -197,7 +181,7 @@ public class DAORoom implements DAOImpl<Room> {
                 room.setAreaOfRoom(resultSet.getInt("area_of_room"));
                 room.setDescription(resultSet.getString("description"));
                 room.setAdditionalServices(resultSet.getString("Additional_services"));
-                room.setTotalPoint(new DAOReview().getTotalPoint(room.getId()));
+                room.setTotalPoint( DAOReview.getTotalPoint(room.getId()));
                 room.setAmenitiesOfRoom(getAmenitiesOfRoom(id));
 
                 room.setStrMainPhoto(getMainPhoto(room.getId()));
@@ -213,7 +197,7 @@ public class DAORoom implements DAOImpl<Room> {
     }
 
 
-    private String getMainPhoto(int idRoom) {
+    public static String getMainPhoto(int idRoom) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         String photo = "";
@@ -237,7 +221,7 @@ public class DAORoom implements DAOImpl<Room> {
     }
 
 
-    private List<String> getPhotos(int idRoom) {
+    private static List<String> getPhotos(int idRoom) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         List<String> photos = new ArrayList<>();
@@ -260,12 +244,12 @@ public class DAORoom implements DAOImpl<Room> {
         return photos;
     }
 
-    private List<String> getAmenitiesOfRoom(int id) {
+    private static List<String> getAmenitiesOfRoom(int id) {
         Connection connection = ConnectionUtil.getConnection();
         List<String> listOfRoomsAmenities = new ArrayList<>();
         PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = connection.prepareStatement(SQL_GET_AMENITIES_OF_ROOM);
+            preparedStatement = connection.prepareStatement(SQL_SELECT_AMENITIES_OF_ROOM);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -280,13 +264,13 @@ public class DAORoom implements DAOImpl<Room> {
     }
 
 
-    public List<Room> getAllRooms() {
+    public static List<Room> getAllRooms() {
         List<Room> roomList = new ArrayList<>();
         setRoom(roomList, SQL_SELECT_ALL_ROOMS);
         return roomList;
     }
 
-    public List<Room> getFilteredRooms(Map<String, String[]> map) {
+    public static List<Room> getFilteredRooms(Map<String, String[]> map) {
         StringBuilder stringBuilder = new StringBuilder(SQL_SELECT_ALL_ROOMS + " AND");
 
         if (map.get("filteringByClass") != null) {
@@ -316,7 +300,7 @@ public class DAORoom implements DAOImpl<Room> {
     }
 
 
-    private String getAllIdRooms(String startDate, String endDate) {
+    private static String getAllIdRooms(String startDate, String endDate) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         StringBuilder stringBuilder = new StringBuilder();
@@ -343,7 +327,7 @@ public class DAORoom implements DAOImpl<Room> {
         return stringBuilder.toString();
     }
 
-    private void setRoom(List<Room> roomList, String query) {
+    private static void setRoom(List<Room> roomList, String query) {
         Statement statement = null;
         ResultSet resultSet = null;
         try {
@@ -358,7 +342,7 @@ public class DAORoom implements DAOImpl<Room> {
                 room.setCountOfClient(resultSet.getInt("count_of_client"));
                 room.setAreaOfRoom(resultSet.getInt("area_of_room"));
                 room.setDescription(resultSet.getString("description"));
-                room.setTotalPoint(new DAOReview().getTotalPoint(room.getId()));
+                room.setTotalPoint( DAOReview.getTotalPoint(room.getId()));
                 if (resultSet.getBlob("photo") != null) {
                     room.setStrMainPhoto(BlobToString.getStringFromBlob(resultSet.getBlob("photo")));
                 }
@@ -373,29 +357,9 @@ public class DAORoom implements DAOImpl<Room> {
         }
     }
 
-//    private void setCategoryReview(int id,Room room) {
-//        PreparedStatement preparedStatement = null;
-//        ResultSet resultSet = null;
-//        try {
-//            preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL);
-//            preparedStatement.setInt(1,id);
-//            resultSet = preparedStatement.executeQuery();
-//            Review.CategoryReviews categoryReviews = new Review.CategoryReviews(
-//                    resultSet.getInt("COMFORTABLE"),
-//                    resultSet.getInt("FORTUNES"),
-//                    resultSet.getInt("SOUNDPROOF"),
-//                    resultSet.getInt("SOUNDPROOF"));
-//            room.setRoomReview(categoryReviews);
-//        } catch (SQLException e) {
-//            System.err.println(e);
-//        }finally {
-//            ConnectionUtil.closeResultSet(resultSet);
-//            ConnectionUtil.closePreparedStatement(preparedStatement);
-//        }
-//    }
 
 
-    public void updateClassOfTheRoom(Room room) {
+    public static void updateClassOfTheRoom(Room room) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_ROOM_CLASS_OF_THE_ROOM);
@@ -410,7 +374,7 @@ public class DAORoom implements DAOImpl<Room> {
     }
 
 
-    public void updatePrice(Room room) {
+    public static void updatePrice(Room room) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_ROOM_PRICE);
@@ -424,7 +388,7 @@ public class DAORoom implements DAOImpl<Room> {
         }
     }
 
-    public void updateRoomNumber(Room room) {
+    public static void updateRoomNumber(Room room) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_ROOM_ROOM_NUMBER);
@@ -438,7 +402,7 @@ public class DAORoom implements DAOImpl<Room> {
         }
     }
 
-    public void updateCountOfClient(Room room) {
+    public static void updateCountOfClient(Room room) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_ROOM_COUNT_OF_CLIENTS);
@@ -452,7 +416,7 @@ public class DAORoom implements DAOImpl<Room> {
         }
     }
 
-    public void updateDescription(Room room) {
+    public static void updateDescription(Room room) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_ROOM_DESCRIPTION);
@@ -467,7 +431,7 @@ public class DAORoom implements DAOImpl<Room> {
     }
 
 
-    public void updateAdditionalService(Room room) {
+    public static void updateAdditionalService(Room room) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_ROOM_ADDITIONAL_SERVICE);
@@ -481,14 +445,14 @@ public class DAORoom implements DAOImpl<Room> {
         }
     }
 
-    public void addPhotos(int id, Collection<Part> parts) {
+    public static void addPhotos(int id, Collection<Part> parts) {
         for (Part part : parts) {
             addPhoto(id, part, false);
         }
 
     }
 
-    public void addPhoto(int id, Part part, boolean isMainPhoto) {
+    public static void addPhoto(int id, Part part, boolean isMainPhoto) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_INSERT_PHOTO);

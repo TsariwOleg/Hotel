@@ -14,16 +14,15 @@ import java.io.IOException;
 public class Orders extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        DAOOrder daoOrder = new DAOOrder();
         String role = req.getSession().getAttribute("role").toString();
 
 
 
         if (role.equals(Role.CLIENT.toString())){
             int id = Integer.parseInt(req.getSession().getAttribute("id").toString());
-            req.setAttribute("orders",daoOrder.getOrderById(id));
+            req.setAttribute("orders",DAOOrder.getOrderById(id));
         }else {
-            req.setAttribute("orders",daoOrder.getOrders());
+            req.setAttribute("orders",DAOOrder.getOrders());
         }
 
         req.getRequestDispatcher("view/myAccount/my_orders.jsp").forward(req,resp);
@@ -32,12 +31,11 @@ public class Orders extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        DAOOrder daoOrder = new DAOOrder();
 
         if (req.getParameter("payForTheOrder")!=null){
             try {
                 int idOrderForDeleting = Integer.parseInt(req.getParameter("payForTheOrder"));
-                daoOrder.payForTheOrder(idOrderForDeleting);
+                DAOOrder.payForTheOrder(idOrderForDeleting);
             }catch (ClassCastException e){
                 System.err.println(e);
             }
@@ -49,7 +47,7 @@ public class Orders extends HttpServlet {
         if (req.getParameter("deleteOrder")!=null){
             try {
                 int idOrderForDeleting = Integer.parseInt(req.getParameter("deleteOrder"));
-                daoOrder.deleteOrder(idOrderForDeleting);
+                DAOOrder.deleteOrder(idOrderForDeleting);
             }catch (ClassCastException e){
                 System.err.println(e);
             }

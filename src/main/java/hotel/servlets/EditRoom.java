@@ -15,7 +15,7 @@ public class EditRoom extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Room room = new DAORoom().get(Integer.parseInt(req.getParameter("id")));
+        Room room =  DAORoom.get(Integer.parseInt(req.getParameter("id")));
         req.setAttribute("room",room);
         req.getRequestDispatcher("/edit_room.jsp").forward(req,resp);
     }

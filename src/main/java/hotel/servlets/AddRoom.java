@@ -52,8 +52,8 @@ public class AddRoom extends HttpServlet {
 
 
 
-        DAORoom daoRoom = new DAORoom();
-        daoRoom.add(room);
+
+        DAORoom.add(room);
 
         resp.sendRedirect(req.getContextPath()+"/rooms");
     }

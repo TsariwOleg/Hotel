@@ -11,31 +11,29 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DAOUser {
-    //todo settingsOfUser
     private static String SQL_INSERT_USER = "INSERT INTO clients(name,surname,ismanager,access,settingsOfUser) values (?,?,?,?,?)";
     private static String SQL_INSERT_ACCESS = "INSERT INTO ACCESS(email,password) values(?,?)";
-
     private static String SQL_INSERT_SETTINGS_USER = "INSERT INTO SETTINGS_USERS(language_id) values(?)";
 
 
+    private static String SQL_SELECT_LANGUAGE_BY_NAME = "SELECT * FROM LANGUAGES WHERE LANGUAGE =?";
     private static String SQL_SELECT_CLIENT_ID_ACCESS = "SELECT c.id FROM ACCESS INNER JOIN CLIENTS c ON ACCESS.ID=c.ACCESS " +
             " WHERE EMAIL=? and PASSWORD=?";
-
     private static String SQL_SELECT_USER = "SELECT * FROM CLIENTS c INNER JOIN ACCESS a ON a.ID =c.ACCESS  " +
             "INNER JOIN SETTINGS_USERS su ON su.ID =c.SETTINGSOFUSER " +
             "INNER JOIN LANGUAGES l  ON l.ID =su.LANGUAGE_ID " +
             "WHERE a.ID=?";
 
+
     private static String SQL_UPDATE_FULL_NAME = "UPDATE clients set name=? , surname=? where id=?";
     private static String SQL_UPDATE_EMAIL = "UPDATE ACCESS set email=? where id=?";
     private static String SQL_UPDATE_PASSWORD = "UPDATE ACCESS set PASSWORD=? where id=?";
-
-    private static String SQL_SELECT_LANGUAGE_BY_NAME = "SELECT * FROM LANGUAGES WHERE LANGUAGE =?";
-
     private static String SQL_UPDATE_LANGUAGE_OF_USER="update SETTINGS_USERS SET LANGUAGE_ID= (SELECT id FROM LANGUAGES WHERE LANGUAGE=?) " +
             "WHERE ID = (SELECT SETTINGSOFUSER FROM CLIENTS C WHERE C.ID =?) ";
 
-    public void add(User user) {
+    private DAOUser(){}
+
+    public static void add(User user) {
         PreparedStatement preparedStatement = null;
         try {
 
@@ -55,7 +53,7 @@ public class DAOUser {
 
     }
 
-    public int addLanguageToUser(User user) {
+    public static int addLanguageToUser(User user) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         int idSettings=0;
@@ -87,7 +85,7 @@ public class DAOUser {
         return idSettings;
     }
 
-    public void changeLanguageOfUser(User user){
+    public static void changeLanguageOfUser(User user){
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_LANGUAGE_OF_USER);
@@ -101,7 +99,7 @@ public class DAOUser {
         }
     }
 
-    public User get(int id) {
+    public static User get(int id) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         User user = new User();
@@ -127,7 +125,7 @@ public class DAOUser {
 
     }
 
-    public void updateFullName(int id, String name, String surname) {
+    public static void updateFullName(int id, String name, String surname) {
 
         PreparedStatement preparedStatement = null;
         try {
@@ -145,16 +143,16 @@ public class DAOUser {
     }
 
 
-    public void updateEmail(int id, String email) {
+    public static void updateEmail(int id, String email) {
         updateAccess(id, email, SQL_UPDATE_EMAIL);
     }
 
 
-    public void updatePassword(int id, String password) {
+    public static void updatePassword(int id, String password) {
         updateAccess(id, password, SQL_UPDATE_PASSWORD);
     }
 
-    private void updateAccess(int id, String value, String query) {
+    private static void updateAccess(int id, String value, String query) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(query);
@@ -169,7 +167,7 @@ public class DAOUser {
     }
 
 
-    private int addAccess(String email, String password) throws SQLException {
+    private static int addAccess(String email, String password) throws SQLException {
         PreparedStatement preparedStatement = null;
         int id = 0;
         try {
@@ -189,8 +187,8 @@ public class DAOUser {
     }
 
 
-    //todo refactor
-    public User checkAccess(String email, String password) {
+
+    public static User checkAccess(String email, String password) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         User user = null;

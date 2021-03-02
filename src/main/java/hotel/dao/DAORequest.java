@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DAORequest {
-    //todo rename DateВeparture
     private static String SQL_INSERT_INTO_REQUEST = "INSERT INTO REQUESTS(id_client,price,class_of_room,count_of_client,DateOccupied,DateВeparture,Notes,status) values(?,?,?,?,?,?,?,?)";
     private static String SQL_INSERT_INTO_REQUESTS_ROOMS = "INSERT INTO REQUESTS_ROOMS VALUES (?,?)";
 
@@ -30,10 +29,12 @@ public class DAORequest {
     private static String SQL_UPDATE_REQUEST_COUNT_OF_CLIENTS = "UPDATE REQUESTS SET COUNT_OF_CLIENT = ? WHERE ID=?";
     private static String SQL_UPDATE_REQUEST_DATE = "UPDATE REQUESTS SET DateOccupied = ? ,DateВeparture=?  WHERE ID=?";
 
-    private static String SQL_UPDATE_REQUEST_STATUS= "UPDATE REQUESTS SET Status=?  WHERE ID=?";
+    private static String SQL_UPDATE_REQUEST_STATUS = "UPDATE REQUESTS SET Status=?  WHERE ID=?";
 
+    private DAORequest() {
+    }
 
-    public void add(Request request) {
+    public static void add(Request request) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_INSERT_INTO_REQUEST);
@@ -46,7 +47,7 @@ public class DAORequest {
                 preparedStatement.setInt(2, request.getPrice());
             }
 
-            if (request.getClassOfTheRoom() ==null) {
+            if (request.getClassOfTheRoom() == null) {
                 preparedStatement.setNull(3, Types.VARCHAR);
             } else {
                 preparedStatement.setString(3, request.getClassOfTheRoom().name());
@@ -77,24 +78,24 @@ public class DAORequest {
         }
     }
 
-    public void addRoomToRequest(int idRequest, int idRoom){
+    public static void addRoomToRequest(int idRequest, int idRoom) {
         PreparedStatement preparedStatement = null;
         System.out.println(idRequest);
         System.out.println(idRoom);
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_INSERT_INTO_REQUESTS_ROOMS);
-            preparedStatement.setInt(1,idRequest);
-            preparedStatement.setInt(2,idRoom);
+            preparedStatement.setInt(1, idRequest);
+            preparedStatement.setInt(2, idRoom);
             preparedStatement.execute();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e);
-        }finally {
+        } finally {
             ConnectionUtil.closePreparedStatement(preparedStatement);
         }
 
     }
 
-    private List<Request> getList(ResultSet resultSet) throws SQLException {
+    private static  List<Request> getList(ResultSet resultSet) throws SQLException {
         List<Request> list = new ArrayList<>();
 
         while (resultSet.next()) {
@@ -103,8 +104,8 @@ public class DAORequest {
             request.setIdUser(resultSet.getInt("id_client"));
             request.setPrice(resultSet.getInt("price"));
 
-            ClassOfTheRoom classOfTheRoom = resultSet.getString("class_of_room")!=null?
-                    ClassOfTheRoom.valueOf(resultSet.getString("class_of_room")):null;
+            ClassOfTheRoom classOfTheRoom = resultSet.getString("class_of_room") != null ?
+                    ClassOfTheRoom.valueOf(resultSet.getString("class_of_room")) : null;
             request.setClassOfTheRoom(classOfTheRoom);
 
             request.setCountOfClient(resultSet.getInt("count_of_client"));
@@ -122,24 +123,24 @@ public class DAORequest {
                 request.setEndDate(resultSet.getDate("DateВeparture").toLocalDate());
             }
 
-            request.setRoomList(new DAORoom().getRoomsRequest(request.getId()));
+            request.setRoomList(DAORoom.getRoomsRequest(request.getId()));
             request.setNote(resultSet.getString("Notes"));
             list.add(request);
         }
         return list;
     }
 
-    public List<Request> getRequests() {
+    public static List<Request> getRequests() {
         Statement statement = null;
         ResultSet resultSet = null;
         List<Request> list = new ArrayList<>();
 
         try {
             statement = ConnectionUtil.getConnection().createStatement();
-            list= getList(  resultSet = statement.executeQuery(SQL_SELECT_REQUESTS));
-        }catch (SQLException e){
+            list = getList(resultSet = statement.executeQuery(SQL_SELECT_REQUESTS));
+        } catch (SQLException e) {
             System.err.println(e);
-        }finally {
+        } finally {
             ConnectionUtil.closeResultSet(resultSet);
             ConnectionUtil.closeStatement(statement);
         }
@@ -147,7 +148,7 @@ public class DAORequest {
     }
 
 
-    public List<Request> getRequestsByClientId(int id) {
+    public static List<Request> getRequestsByClientId(int id) {
         PreparedStatement preparedStatement = null;
         List<Request> list = new ArrayList<>();
         ResultSet resultSet = null;
@@ -166,7 +167,7 @@ public class DAORequest {
         return list;
     }
 
-    public void deleteRequestById(int id) {
+    public static void deleteRequestById(int id) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_DELETE_REQUESTS_BY_ID);
@@ -180,7 +181,7 @@ public class DAORequest {
     }
 
 
-    public void updateClassOfTheRoom(Request request) {
+    public static void updateClassOfTheRoom(Request request) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_REQUEST_CLASS);
@@ -195,7 +196,7 @@ public class DAORequest {
     }
 
 
-    public void updatePrice(Request request) {
+    public static void updatePrice(Request request) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_REQUEST_PRICE);
@@ -209,7 +210,7 @@ public class DAORequest {
         }
     }
 
-    public void updateNote(Request request) {
+    public static void updateNote(Request request) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_REQUEST_NOTE);
@@ -218,13 +219,12 @@ public class DAORequest {
             preparedStatement.execute();
         } catch (SQLException e) {
             System.err.println(e);
-
         } finally {
             ConnectionUtil.closePreparedStatement(preparedStatement);
         }
     }
 
-    public void updateCountOfClients(Request request) {
+    public static void updateCountOfClients(Request request) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_REQUEST_COUNT_OF_CLIENTS);
@@ -239,7 +239,7 @@ public class DAORequest {
         }
     }
 
-    public void updateDate(Request request) {
+    public static void updateDate(Request request) {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_REQUEST_DATE);
@@ -256,16 +256,16 @@ public class DAORequest {
     }
 
 
-    public void changeStatus(int id, String status){
-        PreparedStatement preparedStatement=null;
+    public static void changeStatus(int id, String status) {
+        PreparedStatement preparedStatement = null;
         try {
-            preparedStatement=ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_REQUEST_STATUS);
-            preparedStatement.setString(1,status);
-            preparedStatement.setInt(2,id);
+            preparedStatement = ConnectionUtil.getConnection().prepareStatement(SQL_UPDATE_REQUEST_STATUS);
+            preparedStatement.setString(1, status);
+            preparedStatement.setInt(2, id);
             preparedStatement.execute();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(e);
-        }finally {
+        } finally {
             ConnectionUtil.closePreparedStatement(preparedStatement);
         }
 

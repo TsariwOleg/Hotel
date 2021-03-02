@@ -19,7 +19,7 @@ public class CreateOrder extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        hotel.entity.Room room = new DAORoom().get(Integer.parseInt(req.getParameter("id")));
+        hotel.entity.Room room =  DAORoom.get(Integer.parseInt(req.getParameter("id")));
         req.setAttribute("room",room);
         req.getRequestDispatcher("view/create_order.jsp").forward(req, resp);
     }
@@ -57,23 +57,20 @@ public class CreateOrder extends HttpServlet {
            order.setIdRoom(Integer.parseInt(req.getParameter("id")));
            order.setIdClient(Integer.parseInt(req.getSession().getAttribute("id").toString()));
            order.setNote(req.getParameter("note"));
-           DAOOrder daoOrder = new DAOOrder();
 
-           if (daoOrder.checkDate(order)) {
-               System.out.println("zanyato");
+           if (DAOOrder.checkDate(order)) {
                resp.sendRedirect(req.getContextPath() + "/rooms");
                return;
            }
 
            if (startDate.isEqual(endDate) ||
                    startDate.isBefore(LocalDate.now())) {
-               System.out.println("form nen orm");
                resp.sendRedirect(req.getContextPath() + "/rooms");
                return;
            }
 
 
-        daoOrder.add(order);
+        DAOOrder.add(order);
            resp.sendRedirect(req.getRequestURL().toString() + "?" + req.getQueryString());
            return;
        }

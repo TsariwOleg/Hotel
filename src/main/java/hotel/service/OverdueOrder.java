@@ -16,7 +16,7 @@ public class OverdueOrder implements Runnable{
         while (true){
             if (!date.isEqual(LocalDate.now())){
                 date=LocalDate.now();
-                new DAOOrder().deleteOldOrders(date.minusDays(2));
+                 DAOOrder.deleteOldOrders(date.minusDays(2));
             }
 
         }

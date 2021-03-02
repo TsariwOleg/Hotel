@@ -23,14 +23,13 @@ public class SecuritySettings extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        DAOUser daoUser = new DAOUser();
 
         if (!req.getParameter("password").equals(req.getParameter("repeated_password"))){
             resp.sendRedirect(req.getContextPath()+"securitySettings?error=PasswordsDontMatch");
             return;
         }else {
             int id  = Integer.parseInt(req.getSession().getAttribute("id").toString());
-            daoUser.updatePassword(id,req.getParameter("password"));
+            DAOUser.updatePassword(id,req.getParameter("password"));
         }
 
         System.out.println(req.getParameter("delete_account"));
